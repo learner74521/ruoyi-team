@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechat.mapper.WxUserMapper">
+    
+    <resultMap type="com.ruoyi.wechat.domain.WxUser" id="WxUserResult">
+        <result property="wxOpenid"    column="wx_openid"    />
+        <result property="wxName"    column="wx_name"    />
+        <result property="wxAvatar"    column="wx_avatar"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="wxSex"    column="wx_sex"    />
+        <result property="status"    column="status"    />
+        <result property="wxLevel"    column="wx_level"    />
+        <result property="wxIdCard"    column="wx_idCard"    />
+        <result property="wxStuCard"    column="wx_stuCard"    />
+        <result property="wxVip"    column="wx_vip"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="loginTime"    column="login_time"    />
+    </resultMap>
+
+    <sql id="selectWxUserVo">
+        select wx_openid, wx_name, wx_avatar, phonenumber, wx_sex, status, wx_level, wx_idCard, wx_stuCard, wx_vip, create_time, update_time, login_time from wx_user
+    </sql>
+
+    <select id="selectWxUserList" parameterType="com.ruoyi.wechat.domain.WxUser" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        <where>  
+            <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
+            <if test="wxName != null  and wxName != ''"> and wx_name like concat('%', #{wxName}, '%')</if>
+            <if test="wxAvatar != null  and wxAvatar != ''"> and wx_avatar = #{wxAvatar}</if>
+            <if test="phonenumber != null  and phonenumber != ''"> and phonenumber = #{phonenumber}</if>
+            <if test="wxSex != null  and wxSex != ''"> and wx_sex = #{wxSex}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="wxLevel != null "> and wx_level = #{wxLevel}</if>
+            <if test="wxIdCard != null "> and  wx_idCard = #{wxIdCard}</if>
+            <if test="wxStuCard != null "> and  wx_stuCard = #{wxStuCard}</if>
+            <if test="wxVip != null "> and wx_vip = #{wxVip}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and   date_format(login_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d') </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectWxUserById" parameterType="String" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where wx_openid = #{wxOpenid}
+    </select>
+        
+    <insert id="insertWxUser" parameterType="com.ruoyi.wechat.domain.WxUser">
+        insert into wx_user(
+        <if test="wxOpenid != null  and wxOpenid != ''"> wx_openid,</if>
+        <if test="wxName != null  and wxName != ''">wx_name,</if>
+        <if test="wxAvatar != null  and wxAvatar != ''">wx_avatar,</if>
+        <if test="phonenumber != null  and phonenumber != ''">phonenumber,</if>
+        <if test="wxSex != null  and wxSex != ''"> wx_sex,</if>
+        <if test="status != null  and status != ''">status,</if>
+        create_time
+        )values(
+        <if test="wxOpenid != null  and wxOpenid != ''">#{wxOpenid},</if>
+        <if test="wxName != null  and wxName != ''">#{wxName},</if>
+        <if test="wxAvatar != null  and wxAvatar != ''">#{wxAvatar},</if>
+        <if test="phonenumber != null  and phonenumber != ''">#{phonenumber},</if>
+        <if test="wxSex != null  and wxSex != ''">#{wxSex},</if>
+        <if test="status != null  and status != ''">#{status},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateWxUser" parameterType="com.ruoyi.wechat.domain.WxUser">
+        update wx_user
+       <set>
+            <if test="wxName != null  and wxName != ''">wx_name = #{wxName},</if>
+            <if test="wxAvatar != null  and wxAvatar != ''">wx_avatar = #{wxAvatar},</if>
+            <if test="phonenumber != null  and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="wxSex != null  and wxSex != ''">wx_sex = #{wxSex},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="wxVip != null ">wx_vip = #{wxVip},</if>
+            <if test="wxLevel != null ">wx_level = #{wxLevel},</if>
+            <if test="wxIdCard != null ">wx_idCard = #{wxIdCard},</if>
+            <if test="wxStuCard != null ">wx_stuCard = #{wxStuCard},</if>
+            <if test="loginTime != null ">login_time = #{loginTime},</if>
+           update_time = sysdate()
+       </set>
+        where wx_openid = #{wxOpenid}
+    </update>
+
+    <delete id="deleteWxUserById" parameterType="String">
+        delete from wx_user where wx_openid = #{wxOpenid}
+    </delete>
+
+    <delete id="deleteWxUserByIds" parameterType="String">
+        delete from wx_user where wx_openid in 
+        <foreach item="wxOpenid" collection="array" open="(" separator="," close=")">
+            #{wxOpenid}
+        </foreach>
+    </delete>
+    
+</mapper>

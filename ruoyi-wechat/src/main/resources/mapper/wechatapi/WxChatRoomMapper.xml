@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.mapper.WxChatRoomMapper">
+
+    <resultMap type="com.ruoyi.wechatapi.domain.WxChatRoom" id="WxChatRoomResult">
+        <id property="roomId"    column="room_id"    />
+        <result property="roomType"    column="room_type"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="creatorOpenid"    column="create_time"    />
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.domain.WxChatUserInfo">
+            <result property="creatorName"    column="wx_name"    />
+            <result property="creatorAvatar"    column="wx_avatar"    />
+        </association>
+    </resultMap>
+
+    <sql id="selectWxChatRoomVo">
+        select r.room_id, r.room_type, r.room_name, r.room_num, r.create_time,r.creator_openid,u.wx_name, u.wx_avatar from wx_chat_room r inner join wx_user u on  r.creator_openid = u.wx_openid
+    </sql>
+
+    <select id="selectWxChatRoomList" parameterType="com.ruoyi.wechatapi.domain.WxChatRoom" resultMap="WxChatRoomResult">
+        <include refid="selectWxChatRoomVo"/>
+        <where>
+            <if test="roomType != null  and roomType != ''"> and r.room_type = #{roomType}</if>
+            <if test="roomName != null  and roomName != ''"> and r.room_name like concat('%', #{roomName}, '%')</if>
+            <if test="roomNum != null  and roomNum != ''"> and r.room_num = #{roomNum}</if>
+            <if test="creatorOpenid != null  and creatorOpenid != ''"> and u.wx_openid = #{creatorOpenid}</if>
+        </where>
+    </select>
+
+    <select id="selectWxChatRoomById" parameterType="Long" resultMap="WxChatRoomResult">
+        <include refid="selectWxChatRoomVo"/>
+        where r.room_id = #{roomId}
+    </select>
+
+    <insert id="insertWxChatRoom" parameterType="com.ruoyi.wechatapi.domain.WxChatRoom">
+        insert into wx_chat_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomId != null ">room_id,</if>
+            <if test="roomType != null  and roomType != ''">room_type,</if>
+            <if test="roomName != null  and roomName != ''">room_name,</if>
+            <if test="roomNum != null  and roomNum != ''">room_num,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="creatorOpenid != null  and creatorOpenid != ''">creator_openid,</if>
+            <if test="creatorName != null  and creatorName != ''">creator_name,</if>
+            <if test="creatorAvatar != null  and creatorAvatar != ''">creator_avatar,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomId != null ">#{roomId},</if>
+            <if test="roomType != null  and roomType != ''">#{roomType},</if>
+            <if test="roomName != null  and roomName != ''">#{roomName},</if>
+            <if test="roomNum != null  and roomNum != ''">#{roomNum},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="creatorOpenid != null  and creatorOpenid != ''">#{creatorOpenid},</if>
+            <if test="creatorName != null  and creatorName != ''">#{creatorName},</if>
+            <if test="creatorAvatar != null  and creatorAvatar != ''">#{creatorAvatar},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWxChatRoom" parameterType="com.ruoyi.wechatapi.domain.WxChatRoom">
+        update wx_chat_room
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roomType != null  and roomType != ''">room_type = #{roomType},</if>
+            <if test="roomName != null  and roomName != ''">room_name = #{roomName},</if>
+            <if test="roomNum != null  and roomNum != ''">room_num = #{roomNum},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="creatorOpenid != null  and creatorOpenid != ''">creator_openid = #{creatorOpenid},</if>
+            <if test="creatorName != null  and creatorName != ''">creator_name = #{creatorName},</if>
+            <if test="creatorAvatar != null  and creatorAvatar != ''">creator_avatar = #{creatorAvatar},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where room_id = #{roomId}
+    </update>
+
+    <delete id="deleteWxChatRoomById" parameterType="Long">
+        delete from wx_chat_room where room_id = #{roomId}
+    </delete>
+
+
+</mapper>    

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.mapper.WxUserApiMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.domain.WxUserApi" id="WxUserApiResult">
+        <result property="wxOpenid"    column="wx_openid"    />
+        <result property="wxName"    column="wx_name"    />
+        <result property="wxAvatar"    column="wx_avatar"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="wxSex"    column="wx_sex"    />
+        <result property="status"    column="status"    />
+        <result property="wxLevel"    column="wx_level"    />
+        <result property="wxIdCard"    column="wx_idCard"    />
+        <result property="wxStuCard"    column="wx_stuCard"    />
+        <result property="wxVip"     column="wx_vip" />
+    </resultMap>
+
+    <sql id="selectWxUserApiVo">
+        select wx_openid, wx_name, wx_avatar, phonenumber, status, wx_idCard, wx_stuCard, wx_level, wx_card, wx_vip from wx_user
+    </sql>
+
+    <select id="selectWxUserApiList" parameterType="com.ruoyi.wechatapi.domain.WxUserApi" resultMap="WxUserApiResult">
+        <include refid="selectWxUserApiVo"/>
+        <where>  
+            <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
+            <if test="wxName != null  and wxName != ''"> and wx_name like concat('%', #{wxName}, '%')</if>
+            <if test="wxAvatar != null  and wxAvatar != ''"> and wx_avatar = #{wxAvatar}</if>
+            <if test="phonenumber != null  and phonenumber != ''"> and phonenumber = #{phonenumber}</if>
+            <if test="wxSex != null  and wxSex != ''"> and wx_sex = #{wxSex}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="wxLevel != null "> and wx_level = #{wxLevel}</if>
+            <if test="wxIdCard != null "> and  wx_idCard = #{wxIdCard}</if>
+            <if test="wxStuCard != null "> and  wx_stuCard = #{wxStuCard}</if>
+            <if test="wxVip != null "> and wx_vip = #{wxVip}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxUserApiById" parameterType="String" resultMap="WxUserApiResult">
+        <include refid="selectWxUserApiVo"/>
+        where wx_openid = #{wxOpenid}
+    </select>
+        
+    <insert id="insertWxUserApi" parameterType="com.ruoyi.wechatapi.domain.WxUserApi">
+        insert into wx_user(
+         wx_openid,wx_name,wx_avatar,phonenumber,wx_sex,status,wx_level,wx_idCard,wx_stuCard,wx_vip,create_time
+        )values(
+         #{wxOpenid}, #{wxName},#{wxAvatar},#{phonenumber},#{wxSex}, #{status},#{wxLevel}, #{wxIdCard},#{wxStuCard}, #{wxVip}, sysdate()
+        )
+    </insert>
+
+    <update id="updateWxUserApi" parameterType="com.ruoyi.wechatapi.domain.WxUserApi">
+        update wx_user
+       <set>
+            <if test="wxName != null  and wxName != ''">wx_name = #{wxName},</if>
+            <if test="wxAvatar != null  and wxAvatar != ''">wx_avatar = #{wxAvatar},</if>
+            <if test="phonenumber != null  and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="wxSex != null  and wxSex != ''">wx_sex = #{wxSex},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="loginTime != null ">login_time = #{loginTime},</if>
+            update_time = sysdate()
+       </set>
+        where wx_openid = #{wxOpenid}
+    </update>
+
+    <delete id="deleteWxUserApiById" parameterType="String">
+        delete from wx_user where wx_openid = #{wxOpenid}
+    </delete>
+
+    <delete id="deleteWxUserApiByIds" parameterType="String">
+        delete from wx_user where wx_openid in 
+        <foreach item="wxOpenid" collection="array" open="(" separator="," close=")">
+            #{wxOpenid}
+        </foreach>
+    </delete>
+    
+</mapper>

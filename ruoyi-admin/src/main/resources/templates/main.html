@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--360浏览器优先以webkit内核解析-->
+    <title>Team-RuoYi介绍</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/animate.min.css" th:href="@{/css/main/animate.min.css}" rel="stylesheet"/>
+    <link href="../static/css/main/style.min862f.css" th:href="@{/css/main/style.min862f.css}" rel="stylesheet"/>
+</head>
+
+<body class="gray-bg">
+    <div class="row  border-bottom white-bg dashboard-header">
+        <div class="col-sm-12">
+<!--			广告区域-->
+<!--            <blockquote class="text-warning" style="font-size:14px">-->
+<!--                                           领取阿里云通用云产品1888优惠券-->
+<!--                <br><a target="_blank" href="https://www.aliyun.com/minisite/goods?userCode=brki8iof">https://www.aliyun.com/minisite/goods?userCode=brki8iof</a><br>-->
+<!--                                           领取腾讯云通用云产品2860优惠券-->
+<!--                <br><a target="_blank" href="https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console">https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console</a><br>-->
+<!--                <h4 class="text-danger">云产品通用红包，可叠加官网常规优惠使用。(仅限新用户)</h4>-->
+<!--            </blockquote>-->
+
+<!--            <hr>-->
+        </div>
+        <div class="col-sm-3">
+            <h2>微信小程序-组队吧前端平台</h2>
+            <small>移动设备访问请扫描以下二维码：</small>
+            <br>
+            <br>
+            <img th:src="@{/img/qr_code.png}" width="100%" style="max-width:264px;">
+            <br>
+        </div>
+        <div class="col-sm-5">
+            <h2>Team-RuoYi后台管理框架</h2>
+			<p>基于若依后台框架开发的一款专注于组队、社交的后台管理服务，在若依现有的功能基础上增加自己的业务，另外开发了<b>权限管理</b>，为规范用户行为，创建一个健康绿色的组队交友平台</p>
+            <p>
+                <b>当前版本若依版本：</b><span>v[[${version}]]</span>
+            </p>
+            <br>
+            <p>
+                <a class="btn btn-success btn-outline" href="https://gitee.com/y_project/RuoYi" target="_blank">
+                    <i class="fa fa-cloud"> </i> 访问码云-若依源码
+                </a>
+            </p>
+        </div>
+        <div class="col-sm-4">
+            <h4>技术选型：</h4>
+            <ol>
+                <li>核心框架：Spring Boot。</li>
+                <li>安全框架：Apache Shiro。</li>
+                <li>模板引擎：Thymeleaf。</li>
+                <li>持久层框架：MyBatis。</li>
+				<li>定时任务:Quartz。</li>
+                <li>数据库连接池：Druid。</li>
+                <li>工具类：Fastjson。</li>
+                <li>更多……</li>
+            </ol>
+        </div>
+
+    </div>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-4">
+
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>联系信息</h5>
+
+                    </div>
+                    <div class="ibox-content">
+                        <p><i class="fa fa-send-o"></i> Team-RuoYi官网：<a href="http://www.ruoyi.vip" target="_blank">http://www.ruoyi.vip</a>
+                        </p>
+                        <p><i class="fa fa-weixin"></i> 微信小程序：<a href="javascript:;">/ *若依TEAM</a>
+                        </p>
+                        <p><i class="fa fa-weixin"></i> 微信公众号：<a href="javascript:;" class="支付宝信息">/ *若依TEAM</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>声明</h5>
+                    </div>
+                    <div class="ibox-content no-padding">
+                        <div class="panel-body">
+							<p>
+								&nbsp;&nbsp;&nbsp;&nbsp;此Team-RuoYi后台管理是基于原若依框架的进一步开发，本人并非框架代码原作者，若想使用本人在此基础进一步开发的代码可通过微信联系我，拿到源码。
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+            <div class="col-sm-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>联系开发</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="alert alert-warning">
+                            	本人微信二维码（点击图片放大）
+                        </div>
+                        <p id="pay-qrcode" style="height: 200px;width: 200px; margin: 0 auto">
+                            <a href="javascript:;"><img th:src="@{/img/wx_code.jpg}" width="100%" alt="请使用微信扫码" >
+                            </a>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+    <script type="text/javascript">
+	    $('#pay-qrcode').click(function(){
+	        var html=$(this).html();
+	        parent.layer.open({
+	            title: false,
+	            type: 1,
+	            closeBtn:false,
+	            shadeClose:true,
+	            area: ['400px', 'auto'],
+	            content: html
+	        });
+	    });
+    </script>
+</body>
+</html>
