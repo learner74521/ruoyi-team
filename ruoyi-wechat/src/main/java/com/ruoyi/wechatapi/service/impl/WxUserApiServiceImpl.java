@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.wechatapi.utils.Base64Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechatapi.mapper.WxUserApiMapper;
@@ -32,7 +33,13 @@ public class WxUserApiServiceImpl implements IWxUserApiService
     @Override
     public WxUserApi selectWxUserApiById(String wxOpenid)
     {
-        return wxUserApiMapper.selectWxUserApiById(wxOpenid);
+        WxUserApi wxUserApi=wxUserApiMapper.selectWxUserApiById(wxOpenid);
+        if (wxUserApi.getWxName()!=""&&wxUserApi.getWxName()!=null){
+            Base64Coder base64Coder=new Base64Coder();
+            String decoderText= base64Coder.Base64Decoder(wxUserApi.getWxName());
+            wxUserApi.setWxName(decoderText);
+        }
+        return wxUserApi;
     }
 
     /**
@@ -43,18 +50,16 @@ public class WxUserApiServiceImpl implements IWxUserApiService
      */
     @Override
     public List<WxUserApi> selectWxUserApiList(WxUserApi wxUserApi)
-    {   if (wxUserApi.getWxName()!=""&& wxUserApi.getWxName()!=null) {
-        try {
-            final Base64.Decoder decoder = Base64.getDecoder();
-            String text = wxUserApi.getWxName();
-            //解码
-            String decoderText=new String(decoder.decode(text), "UTF-8");
-            wxUserApi.setWxName(decoderText);
-            }catch (UnsupportedEncodingException e){
-            e.printStackTrace();
+    {
+        List<WxUserApi> wxUserApiList=wxUserApiMapper.selectWxUserApiList(wxUserApi);
+        for (WxUserApi item:wxUserApiList) {
+            if (item.getWxName()!=""&&item.getWxName()!=null){
+                Base64Coder base64Coder=new Base64Coder();
+                String decoderText= base64Coder.Base64Decoder(item.getWxName());
+                item.setWxName(decoderText);
             }
         }
-        return wxUserApiMapper.selectWxUserApiList(wxUserApi);
+        return wxUserApiList;
     }
 
     /**
@@ -66,17 +71,10 @@ public class WxUserApiServiceImpl implements IWxUserApiService
     @Override
     public int insertWxUserApi(WxUserApi wxUserApi)
     {
-        if(wxUserApi.getWxName()!=""&& wxUserApi.getWxName()!=null){
-            try {
-                final Base64.Encoder encoder = Base64.getEncoder();
-                String text = wxUserApi.getWxName();
-                byte[] textByte = text.getBytes("UTF-8");
-                //编码
-                String encodedText = encoder.encodeToString(textByte);
-                wxUserApi.setWxName(encodedText);
-            }catch (UnsupportedEncodingException e){
-                e.printStackTrace();
-            }
+        if (wxUserApi.getWxName()!=""&&wxUserApi.getWxName()!=null){
+            Base64Coder base64Coder=new Base64Coder();
+            String encodedText= base64Coder.Base64Encoder(wxUserApi.getWxName());
+            wxUserApi.setWxName(encodedText);
         }
         wxUserApi.setCreateTime(DateUtils.getNowDate());
         return wxUserApiMapper.insertWxUserApi(wxUserApi);
@@ -91,17 +89,10 @@ public class WxUserApiServiceImpl implements IWxUserApiService
     @Override
     public int updateWxUserApi(WxUserApi wxUserApi)
     {
-        if(wxUserApi.getWxName()!=""&& wxUserApi.getWxName()!=null){
-            try {
-                final Base64.Encoder encoder = Base64.getEncoder();
-                String text = wxUserApi.getWxName();
-                byte[] textByte = text.getBytes("UTF-8");
-                //编码
-                String encodedText = encoder.encodeToString(textByte);
-                wxUserApi.setWxName(encodedText);
-            }catch (UnsupportedEncodingException e){
-                e.printStackTrace();
-            }
+        if (wxUserApi.getWxName()!=""&&wxUserApi.getWxName()!=null){
+            Base64Coder base64Coder=new Base64Coder();
+            String encodedText= base64Coder.Base64Encoder(wxUserApi.getWxName());
+            wxUserApi.setWxName(encodedText);
         }
         wxUserApi.setUpdateTime(DateUtils.getNowDate());
         return wxUserApiMapper.updateWxUserApi(wxUserApi);

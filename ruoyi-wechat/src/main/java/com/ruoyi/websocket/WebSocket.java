@@ -1,21 +1,26 @@
 package com.ruoyi.websocket;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 
-import com.ruoyi.websocket.config.HttpSessionConfigurator;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.websocket.domain.WebSocketMessage;
+import com.ruoyi.websocket.service.IWebSocketService;
+import com.ruoyi.websocket.utils.ApplicationContextRegister;
+import com.ruoyi.wechatapi.utils.Base64Coder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,9 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 
-@ServerEndpoint(value = "/wechatapi/{wxOpenid}",configurator= HttpSessionConfigurator.class)
+@ServerEndpoint(value = "/wechatapi/{wxOpenid}/{roomid}")
 
-public class WebSocket {
+public class WebSocket extends BaseController {
 
     /**
 
@@ -66,14 +71,21 @@ public class WebSocket {
 
     /**
 
-     * 用户昵称
+     * 用户微信标识
 
      */
 
-    private String username;
+    private String wxOpenid;
+    /**
 
-//    @Autowired
-//    private WebSocketMessageImpl webSocketHandler;
+     * 聊天室房间号
+
+     */
+
+    private Long roomId;
+    private  List<WebSocketMessage> messageList;
+    @Autowired
+    private IWebSocketService webSocketService;
 
     /**
 
@@ -87,14 +99,13 @@ public class WebSocket {
 
     @OnOpen
 
-    public void onOpen(@PathParam("wxOpenid") String username, Session session){
-
-        String name=username;
-
+    public void onOpen(@PathParam("wxOpenid") String wxOpenid,@PathParam("roomid") Long roomid, Session session){
+        String userOpenid=wxOpenid;
+        Long ToRoomId=roomid;
 
         try {
 
-            name = new String(username.getBytes("ISO-8859-1"),"utf-8");
+            userOpenid = new String(wxOpenid.getBytes("ISO-8859-1"),"utf-8");
 
         } catch (UnsupportedEncodingException e) {
 
@@ -107,13 +118,13 @@ public class WebSocket {
             onlineNumber++;
 
         }
+        System.out.println("现在来连接的客户id："+session.getId()+"用户名："+userOpenid);
 
-        System.out.println("现在来连接的客户id："+session.getId()+"用户名："+name);
-
-        this.username= name;
+        this.wxOpenid= userOpenid;
 
         this.session= session;
 
+        this.roomId= ToRoomId;
         System.out.println("有新连接加入！ 当前在线人数" + onlineNumber);
 
         try {
@@ -124,34 +135,35 @@ public class WebSocket {
             Map<String,Object> map1 = new HashMap<>(16);
 
             map1.put("messageType",1);
-
-            map1.put("username",name);
-
-            sendMessageAll(JSON.toJSONString(map1),name);
+            map1.put("wxOpenid",userOpenid);
+            map1.put("ToRoomId",ToRoomId);
+            sendMessageTo(JSON.toJSONString(map1),ToRoomId);
 
             //把自己的信息加入到map当中去
+            clients.put(userOpenid, this);
 
-            clients.put(name, this);
-
+//            startPage();
+            //websocket 使用service 层
+            ApplicationContext act = ApplicationContextRegister.getApplicationContext();
+            webSocketService=act.getBean(IWebSocketService.class);
+            messageList= webSocketService.selectWebSocketByRoomId(roomId);
             //给自己发一条消息：告诉自己现在都有谁在线
 
             Map<String,Object> map2 = new HashMap<>(16);
 
             map2.put("messageType",3);
+            map2.put("newsList",messageList);
 
             //移除掉自己
-
             Set<String> set = clients.keySet();
-
             map2.put("onlineUsers",set);
-
-            sendMessageTo(JSON.toJSONString(map2),name);
+            sendMessageToMe(JSON.toJSONString(map2),userOpenid);
 
         }
 
         catch (IOException e){
 
-            logger.error(name+"上线的时候通知所有人发生了错误");
+            logger.error(userOpenid+"上线的时候通知所有人发生了错误");
 
         }
 
@@ -163,7 +175,7 @@ public class WebSocket {
 
         logger.error("服务端发生了错误"+error.getMessage());
 
-        //error.printStackTrace();
+        error.printStackTrace();
 
     }
 
@@ -183,7 +195,7 @@ public class WebSocket {
 
         }
 
-        clients.remove(username);
+        clients.remove(wxOpenid);
 
         try {
 
@@ -195,15 +207,15 @@ public class WebSocket {
 
             map1.put("onlineUsers",clients.keySet());
 
-            map1.put("username",username);
+            map1.put("wxOpenid",wxOpenid);
 
-            sendMessageAll(JSON.toJSONString(map1),username);
+            sendMessageTo(JSON.toJSONString(map1),roomId);
 
         }
 
         catch (IOException e){
 
-            System.out.println(username+"下线的时候通知所有人发生了错误");
+            System.out.println(wxOpenid+"下线的时候通知所有人发生了错误");
 
         }
 
@@ -234,42 +246,30 @@ public class WebSocket {
             System.out.println("来自客户端消息：" + message+"客户端的id是："+session.getId());
 
 
-            JSONObject jsonObject = JSON.parseObject(message);
+            WebSocketMessage webSocketMessage = JSON.parseObject(message,WebSocketMessage.class);
 
-            String textMessage = jsonObject.getString("message");
-
-            String fromusername = jsonObject.getString("username");
-
-            String tousername = jsonObject.getString("to");
-
-
+            //进入server层
+            ApplicationContext act = ApplicationContextRegister.getApplicationContext();
+            webSocketService=act.getBean(IWebSocketService.class);
+            webSocketService.insertWebSocket(webSocketMessage);
+            messageList.add(webSocketMessage);
+            System.out.println(webSocketMessage);
             //如果不是发给所有，那么就发给某一个人
-
             //messageType 1代表上线 2代表下线 3代表在线名单  4代表普通消息
-
             Map<String,Object> map1 = new HashMap<>(16);
 
             map1.put("messageType",4);
+            map1.put("newsList",messageList);
+            sendMessageTo(JSON.toJSONString(map1),roomId);
 
-            map1.put("textMessage",textMessage);
-
-            map1.put("fromusername",fromusername);
-
-            if(tousername.equals("All")){
-
-                map1.put("tousername","所有人");
-
-                sendMessageAll(JSON.toJSONString(map1),fromusername);
-
-            }
-
-            else{
-
-                map1.put("tousername",tousername);
-
-                sendMessageTo(JSON.toJSONString(map1),tousername);
-
-            }
+//            群发信息
+//            if(webSocketMessage.getNewsUserOpenid().equals("All")){
+//
+//                map1.put("tousername","所有人");
+//
+//                sendMessageAll(JSON.toJSONString(map1),ToRoomId);
+//
+//            }
 
         }
 
@@ -282,32 +282,38 @@ public class WebSocket {
         }
 
     }
-
-    public void sendMessageTo(String message, String ToUserName) throws IOException {
-
+   //发送给同聊天室的用户
+    public void sendMessageTo(String message, Long ToRoomId) throws IOException {
         for (WebSocket item : clients.values()) {
-
-            if (item.username.equals(ToUserName) ) {
-
+            if (item.roomId.equals(ToRoomId)){
                 item.session.getAsyncRemote().sendText(message);
-
-                break;
-
             }
 
         }
 
     }
-
-    public void sendMessageAll(String message, String FromUserName) throws IOException {
+    //发送给给自己
+    public void sendMessageToMe(String message,String ToUserOpenid) throws IOException {
 
         for (WebSocket item : clients.values()) {
 
-            item.session.getAsyncRemote().sendText(message);
+            if (item.wxOpenid.equals(ToUserOpenid)) {
 
+                item.session.getAsyncRemote().sendText(message);
+                break;
+            }
         }
 
     }
+//    public void sendMessageAll(String message, Long ToRoomId) throws IOException {
+//
+//        for (WebSocket item : clients.values()) {
+//
+//            item.session.getAsyncRemote().sendText(message);
+//
+//        }
+//
+//    }
 
     public static synchronized int getOnlineCount() {
 
