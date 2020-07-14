@@ -2,6 +2,9 @@ package com.ruoyi.wechat.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.websocket.domain.WebSocketMessage;
+import com.ruoyi.wechatapi.domain.WxUserApi;
+import com.ruoyi.wechatapi.utils.Base64Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechat.mapper.WxUserMapper;
@@ -30,7 +33,13 @@ public class WxUserServiceImpl implements IWxUserService
     @Override
     public WxUser selectWxUserById(String wxOpenid)
     {
-        return wxUserMapper.selectWxUserById(wxOpenid);
+        WxUser wxUser=wxUserMapper.selectWxUserById(wxOpenid);
+        if (wxUser.getWxName()!=""&&wxUser.getWxName()!=null){
+            Base64Coder base64Coder=new Base64Coder();
+            String decoderText= base64Coder.Base64Decoder(wxUser.getWxName());
+            wxUser.setWxName(decoderText);
+        }
+        return wxUser;
     }
 
     /**
@@ -42,7 +51,15 @@ public class WxUserServiceImpl implements IWxUserService
     @Override
     public List<WxUser> selectWxUserList(WxUser wxUser)
     {
-        return wxUserMapper.selectWxUserList(wxUser);
+        List<WxUser> WxUserList=wxUserMapper.selectWxUserList(wxUser);
+        for (WxUser item : WxUserList) {
+            if (item.getWxName()!=""&&item.getWxName()!=null){
+                Base64Coder base64Coder=new Base64Coder();
+                String decoderText= base64Coder.Base64Decoder(item.getWxName());
+                item.setWxName(decoderText);
+            }
+        }
+        return WxUserList;
     }
 
     /**
@@ -54,6 +71,11 @@ public class WxUserServiceImpl implements IWxUserService
     @Override
     public int insertWxUser(WxUser wxUser)
     {
+        if (wxUser.getWxName()!=""&&wxUser.getWxName()!=null){
+            Base64Coder base64Coder=new Base64Coder();
+            String encodedText= base64Coder.Base64Encoder(wxUser.getWxName());
+            wxUser.setWxName(encodedText);
+        }
         wxUser.setCreateTime(DateUtils.getNowDate());
         return wxUserMapper.insertWxUser(wxUser);
     }
@@ -67,6 +89,11 @@ public class WxUserServiceImpl implements IWxUserService
     @Override
     public int updateWxUser(WxUser wxUser)
     {
+        if (wxUser.getWxName()!=""&&wxUser.getWxName()!=null){
+            Base64Coder base64Coder=new Base64Coder();
+            String encodedText= base64Coder.Base64Encoder(wxUser.getWxName());
+            wxUser.setWxName(encodedText);
+        }
         wxUser.setUpdateTime(DateUtils.getNowDate());
         return wxUserMapper.updateWxUser(wxUser);
     }

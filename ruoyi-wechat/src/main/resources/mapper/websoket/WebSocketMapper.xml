@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="newsImage"     column="news_image"     />
         <result property="createTime"    column="create_time"    />
         <result property="newsRoomId"    column="news_room_id"    />
+        <result property="newsType"     column="news_type"/>
         <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.domain.WxChatUserInfo">
             <result property="creatorName"    column="wx_name"    />
             <result property="creatorAvatar"    column="wx_avatar"    />
@@ -18,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWebSocketVo">
-        select n.news_id, n.news_user_openid, n.news_content,n.news_image, n.create_time, n.news_room_id,u.wx_name, u.wx_avatar from wx_chat_news n inner join wx_user u on  n.news_user_openid = u.wx_openid
+        select n.news_id, n.news_user_openid, n.news_content,n.news_image, n.create_time, n.news_type, n.news_room_id,u.wx_name, u.wx_avatar from wx_chat_news n inner join wx_user u on  n.news_user_openid = u.wx_openid
     </sql>
 
 
@@ -27,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="newsUserOpenid != null  and newsUserOpenid != ''"> and news_user_openid = #{newsUserOpenid}</if>
             <if test="newsContent != null  and newsContent != ''"> and news_content = #{newsContent}</if>
+            <if test="newsType != null  and newsType != ''"> and news_type = #{newsType}</if>
             <if test="newsRoomId != null "> and news_room_id = #{newsRoomId}</if>
         </where>
     </select>
@@ -42,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newsUserOpenid != null  and newsUserOpenid != ''">news_user_openid,</if>
             <if test="newsContent != null  and newsContent != ''">news_content,</if>
             <if test="newsImage != null  and newsImage != ''">news_image,</if>
+            <if test="newsType != null  and newsType != ''">news_type,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="newsRoomId != null ">news_room_id,</if>
          </trim>
@@ -49,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newsUserOpenid != null  and newsUserOpenid != ''">#{newsUserOpenid},</if>
             <if test="newsContent != null  and newsContent != ''">#{newsContent},</if>
             <if test="newsImage != null  and newsImage != ''">#{newsImage},</if>
+            <if test="newsType != null  and newsType != ''">#{newsType},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="newsRoomId != null ">#{newsRoomId},</if>
          </trim>

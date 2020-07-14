@@ -35,6 +35,10 @@ public class WebSocketMessage extends BaseEntity
     @Excel(name = "所属聊天室id")
     private Long newsRoomId;
 
+    /** 文本类型 */
+    @Excel(name = "文本类型")
+    private String newsType;
+
     /** 用户信息 */
     @Excel(name = "用户信息")
     private WxChatUserInfo wxChatUserInfo;
@@ -82,6 +86,13 @@ public class WebSocketMessage extends BaseEntity
     {
         return newsRoomId;
     }
+    public String getNewsType() {
+        return newsType;
+    }
+
+    public void setNewsType(String newsType) {
+        this.newsType = newsType;
+    }
     public WxChatUserInfo getWxChatUserInfo() {
         return wxChatUserInfo;
     }
@@ -98,8 +109,10 @@ public class WebSocketMessage extends BaseEntity
             .append("newsImage",getNewsImage())
             .append("createTime", getCreateTime())
             .append("newsRoomId", getNewsRoomId())
+            .append("newsType", getNewsType())
             .append("wxChatUserInfo",getWxChatUserInfo())
             .toString();
     }
+
 
 }
