@@ -2,16 +2,16 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.wechatapi.mapper.WxChatRoomMapper">
+<mapper namespace="com.ruoyi.wechatapi.wxchat.mapper.WxChatRoomMapper">
 
-    <resultMap type="com.ruoyi.wechatapi.domain.WxChatRoom" id="WxChatRoomResult">
+    <resultMap type="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" id="WxChatRoomResult">
         <id property="roomId"    column="room_id"    />
         <result property="roomType"    column="room_type"    />
         <result property="roomName"    column="room_name"    />
         <result property="roomNum"    column="room_num"    />
         <result property="createTime"    column="create_time"    />
         <result property="creatorOpenid"    column="create_time"    />
-        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.domain.WxChatUserInfo">
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
             <result property="creatorName"    column="wx_name"    />
             <result property="creatorAvatar"    column="wx_avatar"    />
         </association>
@@ -21,7 +21,7 @@
         select r.room_id, r.room_type, r.room_name, r.room_num, r.create_time,r.creator_openid,u.wx_name, u.wx_avatar from wx_chat_room r inner join wx_user u on  r.creator_openid = u.wx_openid
     </sql>
 
-    <select id="selectWxChatRoomList" parameterType="com.ruoyi.wechatapi.domain.WxChatRoom" resultMap="WxChatRoomResult">
+    <select id="selectWxChatRoomList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomResult">
         <include refid="selectWxChatRoomVo"/>
         <where>
             <if test="roomType != null  and roomType != ''"> and r.room_type = #{roomType}</if>
@@ -36,7 +36,7 @@
         where r.room_id = #{roomId}
     </select>
 
-    <insert id="insertWxChatRoom" parameterType="com.ruoyi.wechatapi.domain.WxChatRoom">
+    <insert id="insertWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom">
         insert into wx_chat_room
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="roomId != null ">room_id,</if>
@@ -62,7 +62,7 @@
         </trim>
     </insert>
 
-    <update id="updateWxChatRoom" parameterType="com.ruoyi.wechatapi.domain.WxChatRoom">
+    <update id="updateWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom">
         update wx_chat_room
         <trim prefix="SET" suffixOverrides=",">
             <if test="roomType != null  and roomType != ''">room_type = #{roomType},</if>

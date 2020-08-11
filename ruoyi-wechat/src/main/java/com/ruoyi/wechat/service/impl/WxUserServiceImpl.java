@@ -2,9 +2,7 @@ package com.ruoyi.wechat.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.websocket.domain.WebSocketMessage;
-import com.ruoyi.wechatapi.domain.WxUserApi;
-import com.ruoyi.wechatapi.utils.Base64Coder;
+import com.ruoyi.utils.Base64Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechat.mapper.WxUserMapper;

@@ -1,6 +1,6 @@
 package com.ruoyi.websocket.domain;
 
-import com.ruoyi.wechatapi.domain.WxChatUserInfo;
+import com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;

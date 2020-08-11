@@ -2,7 +2,7 @@ package com.ruoyi.websocket.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.wechatapi.utils.Base64Coder;
+import com.ruoyi.utils.Base64Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.websocket.mapper.WebSocketMapper;

@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="newsRoomId"    column="news_room_id"    />
         <result property="newsType"     column="news_type"/>
-        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.domain.WxChatUserInfo">
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
             <result property="creatorName"    column="wx_name"    />
             <result property="creatorAvatar"    column="wx_avatar"    />
         </association>

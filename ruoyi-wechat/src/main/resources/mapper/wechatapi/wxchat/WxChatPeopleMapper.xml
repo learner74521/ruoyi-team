@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.wxchat.mapper.WxChatPeopleMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.wxchat.domain.WxChatPeople" id="WxChatPeopleResult">
+        <result property="peopleId"    column="people_id"    />
+        <result property="peopleOpenid"    column="people_openid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="peopleRoomId"    column="people_room_id"    />
+    </resultMap>
+
+    <sql id="selectWxChatPeopleVo">
+        select people_id, people_openid, create_time, people_room_id from wx_chat_people
+    </sql>
+
+    <select id="selectWxChatPeopleList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatPeople" resultMap="WxChatPeopleResult">
+        <include refid="selectWxChatPeopleVo"/>
+        <where>  
+            <if test="peopleOpenid != null  and peopleOpenid != ''"> and people_openid = #{peopleOpenid}</if>
+            <if test="peopleRoomId != null "> and people_room_id = #{peopleRoomId}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxChatPeopleById" parameterType="Long" resultMap="WxChatPeopleResult">
+        <include refid="selectWxChatPeopleVo"/>
+        where people_id = #{peopleId}
+    </select>
+        
+    <insert id="insertWxChatPeople" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatPeople" useGeneratedKeys="true" keyProperty="peopleId">
+        insert into wx_chat_people
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="peopleOpenid != null  and peopleOpenid != ''">people_openid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="peopleRoomId != null ">people_room_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="peopleOpenid != null  and peopleOpenid != ''">#{peopleOpenid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="peopleRoomId != null ">#{peopleRoomId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxChatPeople" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatPeople">
+        update wx_chat_people
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="peopleOpenid != null  and peopleOpenid != ''">people_openid = #{peopleOpenid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="peopleRoomId != null ">people_room_id = #{peopleRoomId},</if>
+        </trim>
+        where people_id = #{peopleId}
+    </update>
+
+    <delete id="deleteWxChatPeopleById" parameterType="Long">
+        delete from wx_chat_people where people_id = #{peopleId}
+    </delete>
+
+    <delete id="deleteWxChatPeopleByIds" parameterType="String">
+        delete from wx_chat_people where people_id in 
+        <foreach item="peopleId" collection="array" open="(" separator="," close=")">
+            #{peopleId}
+        </foreach>
+    </delete>
+    
+</mapper>

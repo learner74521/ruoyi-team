@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.wechatapi.mapper.WxUserApiMapper">
+<mapper namespace="com.ruoyi.wechatapi.wxchat.mapper.WxUserApiMapper">
     
-    <resultMap type="com.ruoyi.wechatapi.domain.WxUserApi" id="WxUserApiResult">
+    <resultMap type="com.ruoyi.wechatapi.wxchat.domain.WxUserApi" id="WxUserApiResult">
         <result property="wxOpenid"    column="wx_openid"    />
         <result property="wxName"    column="wx_name"    />
         <result property="wxAvatar"    column="wx_avatar"    />
@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select wx_openid, wx_name, wx_avatar, phonenumber, status, wx_idCard, wx_stuCard, wx_level, wx_card, wx_vip from wx_user
     </sql>
 
-    <select id="selectWxUserApiList" parameterType="com.ruoyi.wechatapi.domain.WxUserApi" resultMap="WxUserApiResult">
+    <select id="selectWxUserApiList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxUserApi" resultMap="WxUserApiResult">
         <include refid="selectWxUserApiVo"/>
         <where>  
             <if test="wxOpenid != null  and wxOpenid != ''"> and wx_openid = #{wxOpenid}</if>
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where wx_openid = #{wxOpenid}
     </select>
         
-    <insert id="insertWxUserApi" parameterType="com.ruoyi.wechatapi.domain.WxUserApi">
+    <insert id="insertWxUserApi" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxUserApi">
         insert into wx_user(
          wx_openid,wx_name,wx_avatar,phonenumber,wx_sex,status,wx_level,wx_idCard,wx_stuCard,wx_vip,create_time
         )values(
@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         )
     </insert>
 
-    <update id="updateWxUserApi" parameterType="com.ruoyi.wechatapi.domain.WxUserApi">
+    <update id="updateWxUserApi" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxUserApi">
         update wx_user
        <set>
             <if test="wxName != null  and wxName != ''">wx_name = #{wxName},</if>
