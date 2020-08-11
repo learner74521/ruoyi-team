@@ -7,7 +7,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.websocket.domain.WebSocketMessage;
 import com.ruoyi.websocket.service.IWebSocketService;
 import com.ruoyi.websocket.utils.ApplicationContextRegister;
-import com.ruoyi.wechatapi.utils.Base64Coder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
