@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.discover.mapper.WxDiscoverGoodMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.discover.domain.WxDiscoverGood" id="WxDiscoverGoodResult">
+        <result property="goodId"    column="good_id"    />
+        <result property="goodTypeId"    column="good_type_id"    />
+        <result property="goodType"    column="good_type"    />
+        <result property="goodUserOpenid"    column="good_user_openid"    />
+        <result property="status"    column="status"    />
+        <result property="good1"    column="good1"    />
+        <result property="good2"    column="good2"    />
+    </resultMap>
+
+    <sql id="selectWxDiscoverGoodVo">
+        select good_id, good_type_id, good_type, good_user_openid, status, good1, good2 from wx_discover_good
+    </sql>
+
+    <select id="selectWxDiscoverGoodList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverGood" resultMap="WxDiscoverGoodResult">
+        <include refid="selectWxDiscoverGoodVo"/>
+        <where>  
+            <if test="goodTypeId != null "> and good_type_id = #{goodTypeId}</if>
+            <if test="goodType != null "> and good_type = #{goodType}</if>
+            <if test="goodUserOpenid != null  and goodUserOpenid != ''"> and good_user_openid = #{goodUserOpenid}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="good1 != null "> and good1 = #{good1}</if>
+            <if test="good2 != null "> and good2 = #{good2}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxDiscoverGoodById" parameterType="Long" resultMap="WxDiscoverGoodResult">
+        <include refid="selectWxDiscoverGoodVo"/>
+        where good_id = #{goodId}
+    </select>
+        
+    <insert id="insertWxDiscoverGood" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverGood" useGeneratedKeys="true" keyProperty="goodId">
+        insert into wx_discover_good
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodTypeId != null ">good_type_id,</if>
+            <if test="goodType != null ">good_type,</if>
+            <if test="goodUserOpenid != null  and goodUserOpenid != ''">good_user_openid,</if>
+            <if test="status != null ">status,</if>
+            <if test="good1 != null ">good1,</if>
+            <if test="good2 != null ">good2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodTypeId != null ">#{goodTypeId},</if>
+            <if test="goodType != null ">#{goodType},</if>
+            <if test="goodUserOpenid != null  and goodUserOpenid != ''">#{goodUserOpenid},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="good1 != null ">#{good1},</if>
+            <if test="good2 != null ">#{good2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxDiscoverGood" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverGood">
+        update wx_discover_good
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodTypeId != null ">good_type_id = #{goodTypeId},</if>
+            <if test="goodType != null ">good_type = #{goodType},</if>
+            <if test="goodUserOpenid != null  and goodUserOpenid != ''">good_user_openid = #{goodUserOpenid},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="good1 != null ">good1 = #{good1},</if>
+            <if test="good2 != null ">good2 = #{good2},</if>
+        </trim>
+        where good_id = #{goodId}
+    </update>
+
+    <delete id="deleteWxDiscoverGoodById" parameterType="Long">
+        delete from wx_discover_good where good_id = #{goodId}
+    </delete>
+
+    <delete id="deleteWxDiscoverGoodByIds" parameterType="String">
+        delete from wx_discover_good where good_id in 
+        <foreach item="goodId" collection="array" open="(" separator="," close=")">
+            #{goodId}
+        </foreach>
+    </delete>
+    
+</mapper>

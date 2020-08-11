@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.discover.mapper.WxDiscoverReplyMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.discover.domain.WxDiscoverReply" id="WxDiscoverReplyResult">
+        <result property="replyId"    column="reply_id"    />
+        <result property="commentId"    column="comment_id"    />
+        <result property="replyText"    column="reply_text"    />
+        <result property="fromOpenid"    column="from_openid"    />
+        <result property="toOpenid"    column="to_openid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="reply1"    column="reply1"    />
+        <result property="reply2"    column="reply2"    />
+        <result property="reply3"    column="reply3"    />
+    </resultMap>
+
+    <sql id="selectWxDiscoverReplyVo">
+        select reply_id, comment_id, reply_text, from_openid, to_openid, create_time, reply1, reply2, reply3 from wx_discover_reply
+    </sql>
+
+    <select id="selectWxDiscoverReplyList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverReply" resultMap="WxDiscoverReplyResult">
+        <include refid="selectWxDiscoverReplyVo"/>
+        <where>  
+            <if test="commentId != null "> and comment_id = #{commentId}</if>
+            <if test="replyText != null  and replyText != ''"> and reply_text = #{replyText}</if>
+            <if test="fromOpenid != null  and fromOpenid != ''"> and from_openid = #{fromOpenid}</if>
+            <if test="toOpenid != null  and toOpenid != ''"> and to_openid = #{toOpenid}</if>
+            <if test="reply1 != null  and reply1 != ''"> and reply1 = #{reply1}</if>
+            <if test="reply2 != null  and reply2 != ''"> and reply2 = #{reply2}</if>
+            <if test="reply3 != null  and reply3 != ''"> and reply3 = #{reply3}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxDiscoverReplyById" parameterType="Long" resultMap="WxDiscoverReplyResult">
+        <include refid="selectWxDiscoverReplyVo"/>
+        where reply_id = #{replyId}
+    </select>
+        
+    <insert id="insertWxDiscoverReply" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverReply" useGeneratedKeys="true" keyProperty="replyId">
+        insert into wx_discover_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentId != null ">comment_id,</if>
+            <if test="replyText != null  and replyText != ''">reply_text,</if>
+            <if test="fromOpenid != null  and fromOpenid != ''">from_openid,</if>
+            <if test="toOpenid != null  and toOpenid != ''">to_openid,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="reply1 != null  and reply1 != ''">reply1,</if>
+            <if test="reply2 != null  and reply2 != ''">reply2,</if>
+            <if test="reply3 != null  and reply3 != ''">reply3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentId != null ">#{commentId},</if>
+            <if test="replyText != null  and replyText != ''">#{replyText},</if>
+            <if test="fromOpenid != null  and fromOpenid != ''">#{fromOpenid},</if>
+            <if test="toOpenid != null  and toOpenid != ''">#{toOpenid},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="reply1 != null  and reply1 != ''">#{reply1},</if>
+            <if test="reply2 != null  and reply2 != ''">#{reply2},</if>
+            <if test="reply3 != null  and reply3 != ''">#{reply3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxDiscoverReply" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverReply">
+        update wx_discover_reply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="commentId != null ">comment_id = #{commentId},</if>
+            <if test="replyText != null  and replyText != ''">reply_text = #{replyText},</if>
+            <if test="fromOpenid != null  and fromOpenid != ''">from_openid = #{fromOpenid},</if>
+            <if test="toOpenid != null  and toOpenid != ''">to_openid = #{toOpenid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="reply1 != null  and reply1 != ''">reply1 = #{reply1},</if>
+            <if test="reply2 != null  and reply2 != ''">reply2 = #{reply2},</if>
+            <if test="reply3 != null  and reply3 != ''">reply3 = #{reply3},</if>
+        </trim>
+        where reply_id = #{replyId}
+    </update>
+
+    <delete id="deleteWxDiscoverReplyById" parameterType="Long">
+        delete from wx_discover_reply where reply_id = #{replyId}
+    </delete>
+
+    <delete id="deleteWxDiscoverReplyByIds" parameterType="String">
+        delete from wx_discover_reply where reply_id in 
+        <foreach item="replyId" collection="array" open="(" separator="," close=")">
+            #{replyId}
+        </foreach>
+    </delete>
+    
+</mapper>

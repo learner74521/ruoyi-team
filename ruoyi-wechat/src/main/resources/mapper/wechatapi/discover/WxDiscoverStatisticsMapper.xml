@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.discover.mapper.WxDiscoverStatisticsMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics" id="WxDiscoverStatisticsResult">
+        <result property="statisticsId"    column="statistics_id"    />
+        <result property="contentId"    column="content_id"    />
+        <result property="statisticsCommentNum"    column="statistics_comment_num"    />
+        <result property="statisticsGoodNum"    column="statistics_good_num"    />
+        <result property="statisticsLookNum"    column="statistics_look_num"    />
+        <result property="statistics1"    column="statistics1"    />
+        <result property="statistics2"    column="statistics2"    />
+        <result property="statistics3"    column="statistics3"    />
+    </resultMap>
+
+    <sql id="selectWxDiscoverStatisticsVo">
+        select statistics_id, content_id, statistics_comment_num, statistics_good_num, statistics_look_num, statistics1, statistics2, statistics3 from wx_discover_ statistics
+    </sql>
+
+    <select id="selectWxDiscoverStatisticsList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics" resultMap="WxDiscoverStatisticsResult">
+        <include refid="selectWxDiscoverStatisticsVo"/>
+        <where>  
+            <if test="contentId != null "> and content_id = #{contentId}</if>
+            <if test="statisticsCommentNum != null "> and statistics_comment_num = #{statisticsCommentNum}</if>
+            <if test="statisticsGoodNum != null "> and statistics_good_num = #{statisticsGoodNum}</if>
+            <if test="statisticsLookNum != null "> and statistics_look_num = #{statisticsLookNum}</if>
+            <if test="statistics1 != null "> and statistics1 = #{statistics1}</if>
+            <if test="statistics2 != null "> and statistics2 = #{statistics2}</if>
+            <if test="statistics3 != null "> and statistics3 = #{statistics3}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxDiscoverStatisticsById" parameterType="Long" resultMap="WxDiscoverStatisticsResult">
+        <include refid="selectWxDiscoverStatisticsVo"/>
+        where statistics_id = #{statisticsId}
+    </select>
+        
+    <insert id="insertWxDiscoverStatistics" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics" useGeneratedKeys="true" keyProperty="statisticsId">
+        insert into wx_discover_ statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null ">content_id,</if>
+            <if test="statisticsCommentNum != null ">statistics_comment_num,</if>
+            <if test="statisticsGoodNum != null ">statistics_good_num,</if>
+            <if test="statisticsLookNum != null ">statistics_look_num,</if>
+            <if test="statistics1 != null ">statistics1,</if>
+            <if test="statistics2 != null ">statistics2,</if>
+            <if test="statistics3 != null ">statistics3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId != null ">#{contentId},</if>
+            <if test="statisticsCommentNum != null ">#{statisticsCommentNum},</if>
+            <if test="statisticsGoodNum != null ">#{statisticsGoodNum},</if>
+            <if test="statisticsLookNum != null ">#{statisticsLookNum},</if>
+            <if test="statistics1 != null ">#{statistics1},</if>
+            <if test="statistics2 != null ">#{statistics2},</if>
+            <if test="statistics3 != null ">#{statistics3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxDiscoverStatistics" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics">
+        update wx_discover_ statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contentId != null ">content_id = #{contentId},</if>
+            <if test="statisticsCommentNum != null ">statistics_comment_num = #{statisticsCommentNum},</if>
+            <if test="statisticsGoodNum != null ">statistics_good_num = #{statisticsGoodNum},</if>
+            <if test="statisticsLookNum != null ">statistics_look_num = #{statisticsLookNum},</if>
+            <if test="statistics1 != null ">statistics1 = #{statistics1},</if>
+            <if test="statistics2 != null ">statistics2 = #{statistics2},</if>
+            <if test="statistics3 != null ">statistics3 = #{statistics3},</if>
+        </trim>
+        where statistics_id = #{statisticsId}
+    </update>
+
+    <delete id="deleteWxDiscoverStatisticsById" parameterType="Long">
+        delete from wx_discover_ statistics where statistics_id = #{statisticsId}
+    </delete>
+
+    <delete id="deleteWxDiscoverStatisticsByIds" parameterType="String">
+        delete from wx_discover_ statistics where statistics_id in 
+        <foreach item="statisticsId" collection="array" open="(" separator="," close=")">
+            #{statisticsId}
+        </foreach>
+    </delete>
+    
+</mapper>

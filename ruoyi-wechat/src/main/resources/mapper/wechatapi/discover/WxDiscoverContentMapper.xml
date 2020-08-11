@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.discover.mapper.WxDiscoverContentMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.discover.domain.WxDiscoverContent" id="WxDiscoverContentResult">
+        <result property="contentId"    column="content_id"    />
+        <result property="contentUserOpenid"    column="content_user_openid"    />
+        <result property="contentText"    column="content_text"    />
+        <result property="contentVideo"    column="content_video"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="contentLabel"    column="content_label"    />
+        <result property="contentType"    column="content_type"    />
+        <result property="contentImages"    column="content_images"    />
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
+            <result property="creatorName"    column="wx_name"    />
+            <result property="creatorAvatar"    column="wx_avatar"    />
+        </association>
+    </resultMap>
+
+    <sql id="selectWxDiscoverContentVo">
+        select d.content_id, d.content_user_openid, d.content_text,  d.content_video, d.create_time, d.content_label, d.content_type, d.content_images, u.wx_name, u.wx_avatar from wx_discover_content d inner join wx_user u on d.content_user_openid = u.wx_openid
+    </sql>
+
+    <select id="selectWxDiscoverContentList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverContent" resultMap="WxDiscoverContentResult">
+        <include refid="selectWxDiscoverContentVo"/>
+        <where>  
+            <if test="contentUserOpenid != null  and contentUserOpenid != ''"> and content_user_openid = #{contentUserOpenid}</if>
+            <if test="contentText != null  and contentText != ''"> and content_text = #{contentText}</if>
+            <if test="contentVideo != null  and contentVideo != ''"> and content_video = #{contentVideo}</if>
+            <if test="contentLabel != null  and contentLabel != ''"> and content_label = #{contentLabel}</if>
+            <if test="contentType != null  and contentType != ''"> and content_type = #{contentType}</if>
+            <if test="contentImages != null  and contentImages != ''"> and content_images = #{contentImages}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxDiscoverContentById" parameterType="Long" resultMap="WxDiscoverContentResult">
+        <include refid="selectWxDiscoverContentVo"/>
+        where content_id = #{contentId}
+    </select>
+        
+    <insert id="insertWxDiscoverContent" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverContent" useGeneratedKeys="true" keyProperty="contentId">
+        insert into wx_discover_content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentUserOpenid != null  and contentUserOpenid != ''">content_user_openid,</if>
+            <if test="contentText != null  and contentText != ''">content_text,</if>
+            <if test="contentVideo != null  and contentVideo != ''">content_video,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="contentLabel != null  and contentLabel != ''">content_label,</if>
+            <if test="contentType != null  and contentType != ''">content_type,</if>
+            <if test="contentImages != null  and contentImages != ''">content_images,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentUserOpenid != null  and contentUserOpenid != ''">#{contentUserOpenid},</if>
+            <if test="contentText != null  and contentText != ''">#{contentText},</if>
+            <if test="contentVideo != null  and contentVideo != ''">#{contentVideo},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="contentLabel != null  and contentLabel != ''">#{contentLabel},</if>
+            <if test="contentType != null  and contentType != ''">#{contentType},</if>
+            <if test="contentImages != null  and contentImages != ''">#{contentImages},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxDiscoverContent" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverContent">
+        update wx_discover_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contentUserOpenid != null  and contentUserOpenid != ''">content_user_openid = #{contentUserOpenid},</if>
+            <if test="contentText != null  and contentText != ''">content_text = #{contentText},</if>
+            <if test="contentVideo != null  and contentVideo != ''">content_video = #{contentVideo},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="contentLabel != null  and contentLabel != ''">content_label = #{contentLabel},</if>
+            <if test="contentType != null  and contentType != ''">content_type = #{contentType},</if>
+            <if test="contentImages != null  and contentImages != ''">content_images = #{contentImages},</if>
+        </trim>
+        where content_id = #{contentId}
+    </update>
+
+    <delete id="deleteWxDiscoverContentById" parameterType="Long">
+        delete from wx_discover_content where content_id = #{contentId}
+    </delete>
+
+    <delete id="deleteWxDiscoverContentByIds" parameterType="String">
+        delete from wx_discover_content where content_id in 
+        <foreach item="contentId" collection="array" open="(" separator="," close=")">
+            #{contentId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.discover.mapper.WxDiscoverCommentMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.discover.domain.WxDiscoverComment" id="WxDiscoverCommentResult">
+        <result property="commentId"    column="comment_id"    />
+        <result property="contentId"    column="content_id"    />
+        <result property="commentUserOpenid"    column="comment_user_openid"    />
+        <result property="commentText"    column="comment_text"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="comment1"    column="comment1"    />
+        <result property="comment2"    column="comment2"    />
+        <result property="comment3"    column="comment3"    />
+    </resultMap>
+
+    <sql id="selectWxDiscoverCommentVo">
+        select comment_id, content_id, comment_user_openid, comment_text, create_time, comment1, comment2, comment3 from wx_discover_comment
+    </sql>
+
+    <select id="selectWxDiscoverCommentList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverComment" resultMap="WxDiscoverCommentResult">
+        <include refid="selectWxDiscoverCommentVo"/>
+        <where>  
+            <if test="contentId != null "> and content_id = #{contentId}</if>
+            <if test="commentUserOpenid != null  and commentUserOpenid != ''"> and comment_user_openid = #{commentUserOpenid}</if>
+            <if test="commentText != null  and commentText != ''"> and comment_text = #{commentText}</if>
+            <if test="comment1 != null  and comment1 != ''"> and comment1 = #{comment1}</if>
+            <if test="comment2 != null  and comment2 != ''"> and comment2 = #{comment2}</if>
+            <if test="comment3 != null  and comment3 != ''"> and comment3 = #{comment3}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxDiscoverCommentById" parameterType="Long" resultMap="WxDiscoverCommentResult">
+        <include refid="selectWxDiscoverCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+        
+    <insert id="insertWxDiscoverComment" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverComment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into wx_discover_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contentId != null ">content_id,</if>
+            <if test="commentUserOpenid != null  and commentUserOpenid != ''">comment_user_openid,</if>
+            <if test="commentText != null  and commentText != ''">comment_text,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="comment1 != null  and comment1 != ''">comment1,</if>
+            <if test="comment2 != null  and comment2 != ''">comment2,</if>
+            <if test="comment3 != null  and comment3 != ''">comment3,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contentId != null ">#{contentId},</if>
+            <if test="commentUserOpenid != null  and commentUserOpenid != ''">#{commentUserOpenid},</if>
+            <if test="commentText != null  and commentText != ''">#{commentText},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="comment1 != null  and comment1 != ''">#{comment1},</if>
+            <if test="comment2 != null  and comment2 != ''">#{comment2},</if>
+            <if test="comment3 != null  and comment3 != ''">#{comment3},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxDiscoverComment" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverComment">
+        update wx_discover_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contentId != null ">content_id = #{contentId},</if>
+            <if test="commentUserOpenid != null  and commentUserOpenid != ''">comment_user_openid = #{commentUserOpenid},</if>
+            <if test="commentText != null  and commentText != ''">comment_text = #{commentText},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="comment1 != null  and comment1 != ''">comment1 = #{comment1},</if>
+            <if test="comment2 != null  and comment2 != ''">comment2 = #{comment2},</if>
+            <if test="comment3 != null  and comment3 != ''">comment3 = #{comment3},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteWxDiscoverCommentById" parameterType="Long">
+        delete from wx_discover_comment where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteWxDiscoverCommentByIds" parameterType="String">
+        delete from wx_discover_comment where comment_id in 
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+    
+</mapper>
