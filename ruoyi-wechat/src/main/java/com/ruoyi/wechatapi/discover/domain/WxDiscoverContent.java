@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 发现区域的动态内容对象 wx_discover_content
  * 
@@ -42,6 +44,14 @@ public class WxDiscoverContent extends BaseEntity
     /** 动态的图片地址 */
     @Excel(name = "动态的图片地址")
     private String contentImages;
+
+    /** 统计表 */
+    @Excel(name = "统计表")
+    private WxDiscoverStatistics wxDiscoverStatistics;
+
+    /** 点赞表 */
+    @Excel(name = "点赞表")
+    private List<WxDiscoverGood> wxDiscoverGood;
 
     /** 创建人信息 */
     @Excel(name = "创建人信息")
@@ -112,6 +122,20 @@ public class WxDiscoverContent extends BaseEntity
     {
         return contentImages;
     }
+    public WxDiscoverStatistics getWxDiscoverStatistics() {
+        return wxDiscoverStatistics;
+    }
+
+    public void setWxDiscoverStatistics(WxDiscoverStatistics wxDiscoverStatistics) {
+        this.wxDiscoverStatistics = wxDiscoverStatistics;
+    }
+    public List<WxDiscoverGood> getWxDiscoverGood() {
+        return wxDiscoverGood;
+    }
+
+    public void setWxDiscoverGood(List<WxDiscoverGood> wxDiscoverGood) {
+        this.wxDiscoverGood = wxDiscoverGood;
+    }
     public WxChatUserInfo getWxChatUserInfo() {
         return wxChatUserInfo;
     }
@@ -130,9 +154,12 @@ public class WxDiscoverContent extends BaseEntity
             .append("contentLabel", getContentLabel())
             .append("contentType", getContentType())
             .append("contentImages", getContentImages())
+            .append("WxDiscoverStatistics", getWxDiscoverStatistics())
+            .append("WxDiscoverGood", getWxDiscoverGood())
             .append("WxChatUserInfo", getWxChatUserInfo())
             .toString();
     }
+
 
 
 }

@@ -42,13 +42,26 @@ public class WxDiscoverArrayContent extends BaseEntity
     @Excel(name = "内容类型text_image 文字图片，text_video文字视频")
     private String contentType;
 
-    /** 创建人信息 */
-    @Excel(name = "创建人信息")
-    private WxChatUserInfo wxChatUserInfo;
+    /** 校验点赞状态（1点赞，2取消点赞） */
+    @Excel(name = "点赞状态")
+    private Boolean status=false;
 
     /** 动态内容图片数组 */
     @Excel(name = "动态内容图片数组")
     private List contentImages;
+
+    /** 统计表 */
+    @Excel(name = "统计表")
+    private WxDiscoverStatistics wxDiscoverStatistics;
+
+    /** 点赞表 */
+    @Excel(name = "点赞表")
+    private List<WxDiscoverGood> wxDiscoverGood;
+
+    /** 创建人信息 */
+    @Excel(name = "创建人信息")
+    private WxChatUserInfo wxChatUserInfo;
+
 
     public void setContentId(Long contentId)
     {
@@ -113,6 +126,27 @@ public class WxDiscoverArrayContent extends BaseEntity
     public void setWxChatUserInfo(WxChatUserInfo wxChatUserInfo) {
         this.wxChatUserInfo = wxChatUserInfo;
     }
+    public WxDiscoverStatistics getWxDiscoverStatistics() {
+        return wxDiscoverStatistics;
+    }
+
+    public void setWxDiscoverStatistics(WxDiscoverStatistics wxDiscoverStatistics) {
+        this.wxDiscoverStatistics = wxDiscoverStatistics;
+    }
+    public List<WxDiscoverGood> getWxDiscoverGood() {
+        return wxDiscoverGood;
+    }
+
+    public void setWxDiscoverGood(List<WxDiscoverGood> wxDiscoverGood) {
+        this.wxDiscoverGood = wxDiscoverGood;
+    }
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
     public List getContentImages() {
         return contentImages;
     }
@@ -130,10 +164,14 @@ public class WxDiscoverArrayContent extends BaseEntity
                 .append("createTime", getCreateTime())
                 .append("contentLabel", getContentLabel())
                 .append("contentType", getContentType())
+                .append("Status", getStatus())
                 .append("WxChatUserInfo", getWxChatUserInfo())
+                .append("WxDiscoverStatistics", getWxDiscoverStatistics())
+                .append("WxDiscoverGood", getWxDiscoverGood())
                 .append("wxDiscoverImage", getContentImages())
                 .toString();
     }
+
 
 
 }

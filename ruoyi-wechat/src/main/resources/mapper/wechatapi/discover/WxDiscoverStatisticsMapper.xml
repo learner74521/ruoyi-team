@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWxDiscoverStatisticsVo">
-        select statistics_id, content_id, statistics_comment_num, statistics_good_num, statistics_look_num, statistics1, statistics2, statistics3 from wx_discover_ statistics
+        select statistics_id, content_id, statistics_comment_num, statistics_good_num, statistics_look_num, statistics1, statistics2, statistics3 from wx_discover_statistics
     </sql>
 
     <select id="selectWxDiscoverStatisticsList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics" resultMap="WxDiscoverStatisticsResult">
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertWxDiscoverStatistics" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics" useGeneratedKeys="true" keyProperty="statisticsId">
-        insert into wx_discover_ statistics
+        insert into wx_discover_statistics
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="contentId != null ">content_id,</if>
             <if test="statisticsCommentNum != null ">statistics_comment_num,</if>
@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateWxDiscoverStatistics" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics">
-        update wx_discover_ statistics
+        update wx_discover_statistics
         <trim prefix="SET" suffixOverrides=",">
             <if test="contentId != null ">content_id = #{contentId},</if>
             <if test="statisticsCommentNum != null ">statistics_comment_num = #{statisticsCommentNum},</if>
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteWxDiscoverStatisticsById" parameterType="Long">
-        delete from wx_discover_ statistics where statistics_id = #{statisticsId}
+        delete from wx_discover_statistics where statistics_id = #{statisticsId}
     </delete>
 
     <delete id="deleteWxDiscoverStatisticsByIds" parameterType="String">

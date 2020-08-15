@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverArrayContent;
+import com.ruoyi.wechatapi.discover.domain.WxDiscoverGood;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,12 +41,19 @@ public class WxDiscoverContentController extends BaseController
     public TableDataInfo list(@RequestBody WxDiscoverContent wxDiscoverContent)
     {
         startPage();
+        String userOpenid=wxDiscoverContent.getContentUserOpenid();
         List<WxDiscoverContent> wxDiscoverContentList = wxDiscoverContentService.selectWxDiscoverContentList(wxDiscoverContent);
         List<WxDiscoverArrayContent> wxDiscoverArrayContentList=new ArrayList<>();
         for (WxDiscoverContent array:wxDiscoverContentList) {
             WxDiscoverArrayContent wxDiscoverArrayContent=JSON.parseObject(JSON.toJSONString(array),WxDiscoverArrayContent.class);
             wxDiscoverArrayContent.setContentImages(JSON.parseArray(array.getContentImages()));
             wxDiscoverArrayContentList.add(wxDiscoverArrayContent);
+            for (WxDiscoverGood item:wxDiscoverArrayContent.getWxDiscoverGood()) {
+               if (item.getGoodUserOpenid().equals(userOpenid) && item.getStatus() == 1){
+                   wxDiscoverArrayContent.setStatus(true);
+                   break;
+               }
+            }
         }
         return getDataTable(wxDiscoverArrayContentList);
     }
