@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverGood;
@@ -31,7 +32,7 @@ public class WxDiscoverGoodController extends BaseController
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(WxDiscoverGood wxDiscoverGood)
+    public TableDataInfo list(@RequestBody WxDiscoverGood wxDiscoverGood)
     {
         startPage();
         List<WxDiscoverGood> list = wxDiscoverGoodService.selectWxDiscoverGoodList(wxDiscoverGood);
@@ -43,7 +44,7 @@ public class WxDiscoverGoodController extends BaseController
      */
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WxDiscoverGood wxDiscoverGood)
+    public AjaxResult addSave(@RequestBody WxDiscoverGood wxDiscoverGood)
     {
         return toAjax(wxDiscoverGoodService.insertWxDiscoverGood(wxDiscoverGood));
     }
@@ -54,7 +55,7 @@ public class WxDiscoverGoodController extends BaseController
      */
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(WxDiscoverGood wxDiscoverGood)
+    public AjaxResult editSave(@RequestBody WxDiscoverGood wxDiscoverGood)
     {
         return toAjax(wxDiscoverGoodService.updateWxDiscoverGood(wxDiscoverGood));
     }
@@ -64,7 +65,7 @@ public class WxDiscoverGoodController extends BaseController
      */
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody String ids)
     {
         return toAjax(wxDiscoverGoodService.deleteWxDiscoverGoodByIds(ids));
     }

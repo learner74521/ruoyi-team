@@ -49,10 +49,12 @@ public class WxDiscoverContentController extends BaseController
             wxDiscoverArrayContent.setContentImages(JSON.parseArray(array.getContentImages()));
             wxDiscoverArrayContentList.add(wxDiscoverArrayContent);
             for (WxDiscoverGood item:wxDiscoverArrayContent.getWxDiscoverGood()) {
-               if (item.getGoodUserOpenid().equals(userOpenid) && item.getStatus() == 1){
-                   wxDiscoverArrayContent.setStatus(true);
-                   break;
-               }
+                if (item.getGoodUserOpenid()!=""&&item.getGoodUserOpenid()!=null){
+                    if (item.getGoodUserOpenid().equals(userOpenid) && item.getStatus() == 1){
+                        wxDiscoverArrayContent.setStatus(true);
+                        break;
+                    }
+                }
             }
         }
         return getDataTable(wxDiscoverArrayContentList);
@@ -64,7 +66,7 @@ public class WxDiscoverContentController extends BaseController
      */
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WxDiscoverContent wxDiscoverContent)
+    public AjaxResult addSave(@RequestBody WxDiscoverContent wxDiscoverContent)
     {
         return toAjax(wxDiscoverContentService.insertWxDiscoverContent(wxDiscoverContent));
     }
@@ -74,7 +76,7 @@ public class WxDiscoverContentController extends BaseController
      */
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(WxDiscoverContent wxDiscoverContent)
+    public AjaxResult editSave(@RequestBody WxDiscoverContent wxDiscoverContent)
     {
         return toAjax(wxDiscoverContentService.updateWxDiscoverContent(wxDiscoverContent));
     }
@@ -84,8 +86,19 @@ public class WxDiscoverContentController extends BaseController
      */
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody String ids)
     {
         return toAjax(wxDiscoverContentService.deleteWxDiscoverContentByIds(ids));
+    }
+
+    /**
+     * 删除发现区域的动态内容
+     */
+    @PostMapping( "/delete")
+    @ResponseBody
+    public AjaxResult delete(@RequestBody Long contentId)
+    {
+        System.out.println(contentId);
+        return toAjax(wxDiscoverContentService.deleteWxDiscoverContentById(contentId));
     }
 }

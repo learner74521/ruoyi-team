@@ -32,7 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectWxDiscoverContentVo">
         select d.content_id, d.content_user_openid, d.content_text,  d.content_video, d.create_time, d.content_label, d.content_type, d.content_images,
         u.wx_name, u.wx_avatar,s.statistics_look_num, s.statistics_good_num, s.statistics_comment_num, g.good_user_openid, g.status, g.good_type
-        from wx_discover_content d inner join wx_user u on d.content_user_openid = u.wx_openid
+        from wx_discover_content d
+        left join wx_user u on d.content_user_openid = u.wx_openid
         left join wx_discover_statistics s on d.content_id = s.content_id
         left join wx_discover_good g on d.content_id = g.good_type_id
     </sql>
@@ -42,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="contentLabel != null  and contentLabel != ''"> and content_label = #{contentLabel}</if>
         </where>
+        order by d.content_id desc
     </select>
     
     <select id="selectWxDiscoverContentById" parameterType="Long" resultMap="WxDiscoverContentResult">

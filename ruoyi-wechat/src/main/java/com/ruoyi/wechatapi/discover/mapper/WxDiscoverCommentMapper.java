@@ -14,10 +14,18 @@ public interface WxDiscoverCommentMapper
     /**
      * 查询动态评论
      * 
-     * @param commentId 动态评论ID
+     * @param contentId 动态ID
      * @return 动态评论
      */
-    public WxDiscoverComment selectWxDiscoverCommentById(Long commentId);
+    public List<WxDiscoverComment> selectWxDiscoverCommentById(Long contentId);
+
+    /**
+     * 查询动态评论
+     *
+     * @param commentId 动态ID
+     * @return 动态评论
+     */
+    public Long selectWxDiscoverCommentByCId(Long commentId);
 
     /**
      * 查询动态评论列表

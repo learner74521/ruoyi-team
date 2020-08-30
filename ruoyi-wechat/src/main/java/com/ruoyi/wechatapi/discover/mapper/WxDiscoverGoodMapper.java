@@ -17,7 +17,7 @@ public interface WxDiscoverGoodMapper
      * @param goodId 点赞ID
      * @return 点赞
      */
-    public WxDiscoverGood selectWxDiscoverGoodById(Long goodId);
+    public List<WxDiscoverGood> selectWxDiscoverGoodById(Long goodId);
 
     /**
      * 查询点赞列表

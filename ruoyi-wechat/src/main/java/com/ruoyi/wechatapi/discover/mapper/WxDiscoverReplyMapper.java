@@ -14,10 +14,18 @@ public interface WxDiscoverReplyMapper
     /**
      * 查询评论回复
      * 
-     * @param replyId 评论回复ID
+     * @param commentId 评论ID
      * @return 评论回复
      */
-    public WxDiscoverReply selectWxDiscoverReplyById(Long replyId);
+    public List<WxDiscoverReply> selectWxDiscoverReplyById(Long commentId);
+
+    /**
+     * 查询评论回复
+     *
+     * @param commentId 评论ID
+     * @return 评论回复
+     */
+    public Long selectWxDiscoverReplyByCId(Long commentId);
 
     /**
      * 查询评论回复列表

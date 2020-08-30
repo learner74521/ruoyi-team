@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverReply;
@@ -32,7 +33,7 @@ public class WxDiscoverReplyController extends BaseController
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(WxDiscoverReply wxDiscoverReply)
+    public TableDataInfo list(@RequestBody WxDiscoverReply wxDiscoverReply)
     {
         startPage();
         List<WxDiscoverReply> list = wxDiscoverReplyService.selectWxDiscoverReplyList(wxDiscoverReply);
@@ -45,7 +46,7 @@ public class WxDiscoverReplyController extends BaseController
      */
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WxDiscoverReply wxDiscoverReply)
+    public AjaxResult addSave(@RequestBody WxDiscoverReply wxDiscoverReply)
     {
         return toAjax(wxDiscoverReplyService.insertWxDiscoverReply(wxDiscoverReply));
     }
@@ -57,7 +58,7 @@ public class WxDiscoverReplyController extends BaseController
      */
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(WxDiscoverReply wxDiscoverReply)
+    public AjaxResult editSave(@RequestBody WxDiscoverReply wxDiscoverReply)
     {
         return toAjax(wxDiscoverReplyService.updateWxDiscoverReply(wxDiscoverReply));
     }
@@ -67,8 +68,18 @@ public class WxDiscoverReplyController extends BaseController
      */
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody String ids)
     {
         return toAjax(wxDiscoverReplyService.deleteWxDiscoverReplyByIds(ids));
+    }
+
+    /**
+     * 删除评论回复
+     */
+    @PostMapping( "/delete")
+    @ResponseBody
+    public AjaxResult delete(@RequestBody Long replyId)
+    {
+        return toAjax(wxDiscoverReplyService.deleteWxDiscoverReplyById(replyId));
     }
 }

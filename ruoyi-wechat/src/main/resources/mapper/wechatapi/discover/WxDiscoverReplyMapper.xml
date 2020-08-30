@@ -11,33 +11,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="fromOpenid"    column="from_openid"    />
         <result property="toOpenid"    column="to_openid"    />
         <result property="createTime"    column="create_time"    />
-        <result property="reply1"    column="reply1"    />
+        <result property="contentId"    column="content_id"    />
         <result property="reply2"    column="reply2"    />
         <result property="reply3"    column="reply3"    />
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo" resultMap="WxChatUserInfoResult"/>
+    </resultMap>
+
+    <resultMap id="WxChatUserInfoResult" type="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
+        <result property="creatorName"    column="wx_name"    />
+        <result property="creatorAvatar"    column="wx_avatar"    />
     </resultMap>
 
     <sql id="selectWxDiscoverReplyVo">
-        select reply_id, comment_id, reply_text, from_openid, to_openid, create_time, reply1, reply2, reply3 from wx_discover_reply
+        select d.reply_id, d.comment_id, d.reply_text, d.from_openid, d.to_openid, d.create_time, d.content_id, d.reply2, d.reply3,u.wx_name, u.wx_avatar
+        from wx_discover_reply d
+        left join wx_user u on d.from_openid = u.wx_openid
     </sql>
 
     <select id="selectWxDiscoverReplyList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverReply" resultMap="WxDiscoverReplyResult">
         <include refid="selectWxDiscoverReplyVo"/>
-        <where>  
+        <where>
             <if test="commentId != null "> and comment_id = #{commentId}</if>
             <if test="replyText != null  and replyText != ''"> and reply_text = #{replyText}</if>
             <if test="fromOpenid != null  and fromOpenid != ''"> and from_openid = #{fromOpenid}</if>
             <if test="toOpenid != null  and toOpenid != ''"> and to_openid = #{toOpenid}</if>
-            <if test="reply1 != null  and reply1 != ''"> and reply1 = #{reply1}</if>
+            <if test="contentId != null  and contentId != ''"> and content_id = #{contentId}</if>
             <if test="reply2 != null  and reply2 != ''"> and reply2 = #{reply2}</if>
             <if test="reply3 != null  and reply3 != ''"> and reply3 = #{reply3}</if>
         </where>
     </select>
-    
+
     <select id="selectWxDiscoverReplyById" parameterType="Long" resultMap="WxDiscoverReplyResult">
         <include refid="selectWxDiscoverReplyVo"/>
+        where comment_id = #{commentId} order by d.reply_id desc
+    </select>
+
+    <select id="selectWxDiscoverReplyByCId" parameterType="Long" resultType="Long">
+       select content_id from wx_discover_reply
         where reply_id = #{replyId}
     </select>
-        
+
     <insert id="insertWxDiscoverReply" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverReply" useGeneratedKeys="true" keyProperty="replyId">
         insert into wx_discover_reply
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -46,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fromOpenid != null  and fromOpenid != ''">from_openid,</if>
             <if test="toOpenid != null  and toOpenid != ''">to_openid,</if>
             <if test="createTime != null ">create_time,</if>
-            <if test="reply1 != null  and reply1 != ''">reply1,</if>
+            <if test="contentId != null  and contentId != ''">content_id,</if>
             <if test="reply2 != null  and reply2 != ''">reply2,</if>
             <if test="reply3 != null  and reply3 != ''">reply3,</if>
          </trim>
@@ -56,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fromOpenid != null  and fromOpenid != ''">#{fromOpenid},</if>
             <if test="toOpenid != null  and toOpenid != ''">#{toOpenid},</if>
             <if test="createTime != null ">#{createTime},</if>
-            <if test="reply1 != null  and reply1 != ''">#{reply1},</if>
+            <if test="contentId != null  and contentId != ''">#{contentId},</if>
             <if test="reply2 != null  and reply2 != ''">#{reply2},</if>
             <if test="reply3 != null  and reply3 != ''">#{reply3},</if>
          </trim>
@@ -70,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fromOpenid != null  and fromOpenid != ''">from_openid = #{fromOpenid},</if>
             <if test="toOpenid != null  and toOpenid != ''">to_openid = #{toOpenid},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
-            <if test="reply1 != null  and reply1 != ''">reply1 = #{reply1},</if>
+            <if test="contentId != null  and contentId != ''">content_id = #{contentId},</if>
             <if test="reply2 != null  and reply2 != ''">reply2 = #{reply2},</if>
             <if test="reply3 != null  and reply3 != ''">reply3 = #{reply3},</if>
         </trim>

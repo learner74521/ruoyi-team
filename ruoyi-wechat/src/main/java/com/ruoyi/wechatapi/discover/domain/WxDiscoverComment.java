@@ -1,9 +1,12 @@
 package com.ruoyi.wechatapi.discover.domain;
 
+import com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.List;
 
 /**
  * 动态评论对象 wx_discover_comment
@@ -41,6 +44,15 @@ public class WxDiscoverComment extends BaseEntity
     /** null */
     @Excel(name = "null")
     private String comment3;
+
+    /** 创建人信息 */
+    @Excel(name = "创建人信息")
+    private WxChatUserInfo wxChatUserInfo;
+
+
+    /** 评论回复列表 */
+    @Excel(name = "评论回复列表")
+    private List<WxDiscoverReply> wxDiscoverReplyList;
 
     public void setCommentId(Long commentId) 
     {
@@ -105,7 +117,20 @@ public class WxDiscoverComment extends BaseEntity
     {
         return comment3;
     }
+    public WxChatUserInfo getWxChatUserInfo() {
+        return wxChatUserInfo;
+    }
 
+    public void setWxChatUserInfo(WxChatUserInfo wxChatUserInfo) {
+        this.wxChatUserInfo = wxChatUserInfo;
+    }
+    public List<WxDiscoverReply> getWxDiscoverReplyList() {
+        return wxDiscoverReplyList;
+    }
+
+    public void setWxDiscoverReplyList(List<WxDiscoverReply> wxDiscoverReplyList) {
+        this.wxDiscoverReplyList = wxDiscoverReplyList;
+    }
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -117,6 +142,11 @@ public class WxDiscoverComment extends BaseEntity
             .append("comment1", getComment1())
             .append("comment2", getComment2())
             .append("comment3", getComment3())
+            .append("WxChatUserInfo", getWxChatUserInfo())
+            .append("WxDiscoverReplyList", getWxDiscoverReplyList())
             .toString();
     }
+
+
+
 }

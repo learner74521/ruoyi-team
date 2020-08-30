@@ -2,6 +2,9 @@ package com.ruoyi.wechatapi.discover.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics;
+import com.ruoyi.wechatapi.discover.mapper.WxDiscoverReplyMapper;
+import com.ruoyi.wechatapi.discover.mapper.WxDiscoverStatisticsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechatapi.discover.mapper.WxDiscoverCommentMapper;
@@ -21,16 +24,27 @@ public class WxDiscoverCommentServiceImpl implements IWxDiscoverCommentService
     @Autowired
     private WxDiscoverCommentMapper wxDiscoverCommentMapper;
 
+    @Autowired
+    private WxDiscoverReplyMapper wxDiscoverReplyMapper;
+
+    @Autowired
+    private WxDiscoverStatisticsMapper wxDiscoverStatisticsMapper;
+
     /**
      * 查询动态评论
      * 
-     * @param commentId 动态评论ID
+     * @param contentId 动态ID
      * @return 动态评论
      */
     @Override
-    public WxDiscoverComment selectWxDiscoverCommentById(Long commentId)
+    public List<WxDiscoverComment> selectWxDiscoverCommentById(Long contentId)
     {
-        return wxDiscoverCommentMapper.selectWxDiscoverCommentById(commentId);
+        List<WxDiscoverComment> wxDiscoverCommentList=wxDiscoverCommentMapper.selectWxDiscoverCommentById(contentId);
+        for (WxDiscoverComment item:wxDiscoverCommentList) {
+           item.setWxDiscoverReplyList(wxDiscoverReplyMapper.selectWxDiscoverReplyById(item.getCommentId()));
+        }
+        System.out.println(wxDiscoverCommentList);
+        return wxDiscoverCommentList;
     }
 
     /**
@@ -54,6 +68,7 @@ public class WxDiscoverCommentServiceImpl implements IWxDiscoverCommentService
     @Override
     public int insertWxDiscoverComment(WxDiscoverComment wxDiscoverComment)
     {
+        wxDiscoverStatisticsMapper.updateAddCommentStatistics(wxDiscoverComment.getContentId());
         wxDiscoverComment.setCreateTime(DateUtils.getNowDate());
         return wxDiscoverCommentMapper.insertWxDiscoverComment(wxDiscoverComment);
     }
@@ -91,6 +106,8 @@ public class WxDiscoverCommentServiceImpl implements IWxDiscoverCommentService
     @Override
     public int deleteWxDiscoverCommentById(Long commentId)
     {
+        Long contentId=wxDiscoverCommentMapper.selectWxDiscoverCommentByCId(commentId);
+        wxDiscoverStatisticsMapper.updateReduceCommentStatistics(contentId);
         return wxDiscoverCommentMapper.deleteWxDiscoverCommentById(commentId);
     }
 }

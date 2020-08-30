@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectWxDiscoverStatisticsById" parameterType="Long" resultMap="WxDiscoverStatisticsResult">
         <include refid="selectWxDiscoverStatisticsVo"/>
-        where statistics_id = #{statisticsId}
+        where content_id = #{contentId}
     </select>
         
     <insert id="insertWxDiscoverStatistics" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics" useGeneratedKeys="true" keyProperty="statisticsId">
@@ -59,6 +59,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <update id="updateAddLookStatistics" parameterType="long">
+        update wx_discover_statistics set statistics_look_num = statistics_look_num+1
+        where content_id = #{contentId}
+    </update>
+
+    <update id="updateAddCommentStatistics" parameterType="long">
+        update wx_discover_statistics set statistics_comment_num = statistics_comment_num+1
+        where content_id = #{contentId}
+    </update>
+
+    <update id="updateReduceCommentStatistics" parameterType="long">
+        update wx_discover_statistics set statistics_comment_num = statistics_comment_num-1
+        where content_id = #{contentId}
+    </update>
+
     <update id="updateWxDiscoverStatistics" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics">
         update wx_discover_statistics
         <trim prefix="SET" suffixOverrides=",">
@@ -66,11 +81,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="statisticsCommentNum != null ">statistics_comment_num = #{statisticsCommentNum},</if>
             <if test="statisticsGoodNum != null ">statistics_good_num = #{statisticsGoodNum},</if>
             <if test="statisticsLookNum != null ">statistics_look_num = #{statisticsLookNum},</if>
-            <if test="statistics1 != null ">statistics1 = #{statistics1},</if>
-            <if test="statistics2 != null ">statistics2 = #{statistics2},</if>
-            <if test="statistics3 != null ">statistics3 = #{statistics3},</if>
         </trim>
-        where statistics_id = #{statisticsId}
+        where content_id = #{contentId}
     </update>
 
     <delete id="deleteWxDiscoverStatisticsById" parameterType="Long">

@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics;
@@ -32,7 +33,7 @@ public class WxDiscoverStatisticsController extends BaseController
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(WxDiscoverStatistics wxDiscoverStatistics)
+    public TableDataInfo list(@RequestBody WxDiscoverStatistics wxDiscoverStatistics)
     {
         startPage();
         List<WxDiscoverStatistics> list = wxDiscoverStatisticsService.selectWxDiscoverStatisticsList(wxDiscoverStatistics);
@@ -45,7 +46,7 @@ public class WxDiscoverStatisticsController extends BaseController
      */
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WxDiscoverStatistics wxDiscoverStatistics)
+    public AjaxResult addSave(@RequestBody WxDiscoverStatistics wxDiscoverStatistics)
     {
         return toAjax(wxDiscoverStatisticsService.insertWxDiscoverStatistics(wxDiscoverStatistics));
     }
@@ -55,9 +56,21 @@ public class WxDiscoverStatisticsController extends BaseController
      */
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(WxDiscoverStatistics wxDiscoverStatistics)
+    public AjaxResult editSave(@RequestBody WxDiscoverStatistics wxDiscoverStatistics)
     {
         return toAjax(wxDiscoverStatisticsService.updateWxDiscoverStatistics(wxDiscoverStatistics));
+    }
+
+    /**
+     * 增加动态的浏览量数量
+     *
+     * @param contentId 增加动态的浏览量数量
+     * @return 结果
+     */
+    @PostMapping("/addLook")
+    @ResponseBody
+    public int AddLook(@RequestBody Long contentId){
+        return wxDiscoverStatisticsService.updateAddLookStatistics(contentId);
     }
 
     /**
@@ -65,7 +78,7 @@ public class WxDiscoverStatisticsController extends BaseController
      */
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody String ids)
     {
         return toAjax(wxDiscoverStatisticsService.deleteWxDiscoverStatisticsByIds(ids));
     }

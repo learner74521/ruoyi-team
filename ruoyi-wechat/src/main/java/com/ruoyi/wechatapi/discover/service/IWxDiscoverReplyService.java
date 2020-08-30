@@ -17,7 +17,7 @@ public interface IWxDiscoverReplyService
      * @param replyId 评论回复ID
      * @return 评论回复
      */
-    public WxDiscoverReply selectWxDiscoverReplyById(Long replyId);
+    public List<WxDiscoverReply> selectWxDiscoverReplyById(Long replyId);
 
     /**
      * 查询评论回复列表

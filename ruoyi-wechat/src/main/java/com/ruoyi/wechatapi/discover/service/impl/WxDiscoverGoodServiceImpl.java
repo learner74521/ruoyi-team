@@ -1,6 +1,8 @@
 package com.ruoyi.wechatapi.discover.service.impl;
 
 import java.util.List;
+
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechatapi.discover.mapper.WxDiscoverGoodMapper;
@@ -27,7 +29,7 @@ public class WxDiscoverGoodServiceImpl implements IWxDiscoverGoodService
      * @return 点赞
      */
     @Override
-    public WxDiscoverGood selectWxDiscoverGoodById(Long goodId)
+    public List<WxDiscoverGood> selectWxDiscoverGoodById(Long goodId)
     {
         return wxDiscoverGoodMapper.selectWxDiscoverGoodById(goodId);
     }
@@ -53,6 +55,14 @@ public class WxDiscoverGoodServiceImpl implements IWxDiscoverGoodService
     @Override
     public int insertWxDiscoverGood(WxDiscoverGood wxDiscoverGood)
     {
+        List<WxDiscoverGood> wxDiscoverGoodList=wxDiscoverGoodMapper.selectWxDiscoverGoodById(wxDiscoverGood.getGoodTypeId());
+        for (WxDiscoverGood item:wxDiscoverGoodList) {
+            if (item.getGoodUserOpenid()!=null&&item.getGoodUserOpenid()!=""){
+                if (item.getGoodUserOpenid()!=wxDiscoverGood.getGoodUserOpenid()){
+
+                }
+            }
+        }
         return wxDiscoverGoodMapper.insertWxDiscoverGood(wxDiscoverGood);
     }
 
