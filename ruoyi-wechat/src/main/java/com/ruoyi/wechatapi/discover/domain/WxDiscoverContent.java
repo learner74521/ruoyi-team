@@ -1,5 +1,6 @@
 package com.ruoyi.wechatapi.discover.domain;
 
+import com.ruoyi.common.core.domain.PageEntity;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2020-08-09
  */
-public class WxDiscoverContent extends BaseEntity
+public class WxDiscoverContent extends PageEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +45,14 @@ public class WxDiscoverContent extends BaseEntity
     /** 动态的图片地址 */
     @Excel(name = "动态的图片地址")
     private String contentImages;
+
+    /** 所在城市 */
+    @Excel(name = "所在城市")
+    private String contentCity;
+
+    /** 地理位置 */
+    @Excel(name = "地理位置")
+    private String contentPosition;
 
     /** 统计表 */
     @Excel(name = "统计表")
@@ -126,6 +135,21 @@ public class WxDiscoverContent extends BaseEntity
         return wxDiscoverStatistics;
     }
 
+    public String getContentCity() {
+        return contentCity;
+    }
+
+    public void setContentCity(String contentCity) {
+        this.contentCity = contentCity;
+    }
+
+    public String getContentPosition() {
+        return contentPosition;
+    }
+
+    public void setContentPosition(String contentPosition) {
+        this.contentPosition = contentPosition;
+    }
     public void setWxDiscoverStatistics(WxDiscoverStatistics wxDiscoverStatistics) {
         this.wxDiscoverStatistics = wxDiscoverStatistics;
     }
@@ -154,6 +178,8 @@ public class WxDiscoverContent extends BaseEntity
             .append("contentLabel", getContentLabel())
             .append("contentType", getContentType())
             .append("contentImages", getContentImages())
+            .append("contentCity",getContentCity())
+            .append("contentPosition",getContentPosition())
             .append("WxDiscoverStatistics", getWxDiscoverStatistics())
             .append("WxDiscoverGood", getWxDiscoverGood())
             .append("WxChatUserInfo", getWxChatUserInfo())

@@ -2,6 +2,8 @@ package com.ruoyi.wechatapi.wxchat.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.wechatapi.wxchat.domain.WxChatUnread;
+import com.ruoyi.wechatapi.wxchat.mapper.WxChatUnreadMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechatapi.wxchat.mapper.WxChatPeopleMapper;
@@ -21,6 +23,8 @@ public class WxChatPeopleServiceImpl implements IWxChatPeopleService
     @Autowired
     private WxChatPeopleMapper wxChatPeopleMapper;
 
+    @Autowired
+    private WxChatUnreadMapper wxChatUnreadMapper;
     /**
      * 查询聊天室人员信息
      * 
@@ -54,6 +58,11 @@ public class WxChatPeopleServiceImpl implements IWxChatPeopleService
     @Override
     public int insertWxChatPeople(WxChatPeople wxChatPeople)
     {
+        WxChatUnread wxChatUnread=new WxChatUnread();
+        wxChatUnread.setUserOpenid(wxChatPeople.getPeopleOpenid());
+        wxChatUnread.setRoomId(wxChatPeople.getPeopleRoomId());
+        wxChatUnread.setUpdateTime(DateUtils.getNowDate());
+        wxChatUnreadMapper.insertWxChatUnread(wxChatUnread);
         wxChatPeople.setCreateTime(DateUtils.getNowDate());
         return wxChatPeopleMapper.insertWxChatPeople(wxChatPeople);
     }

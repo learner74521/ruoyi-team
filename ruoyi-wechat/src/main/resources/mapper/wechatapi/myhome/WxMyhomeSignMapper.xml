@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.myhome.mapper.WxMyhomeSignMapper">
+    
+    <resultMap type="com.ruoyi.wechatapi.myhome.domain.WxMyhomeSign" id="WxMyhomeSignResult">
+        <result property="signId"    column="sign_id"    />
+        <result property="signOpenid"    column="sign_openid"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="signDay"    column="sign_day"    />
+        <result property="sign1"    column="sign1"    />
+        <result property="sign2"    column="sign2"    />
+        <result property="sign3"    column="sign3"    />
+    </resultMap>
+
+    <sql id="selectWxMyhomeSignVo">
+        select sign_id, sign_openid, create_date, sign_day, sign1, sign2, sign3 from wx_myhome_sign
+    </sql>
+
+    <select id="selectWxMyhomeSignList" parameterType="com.ruoyi.wechatapi.myhome.domain.WxMyhomeSign" resultMap="WxMyhomeSignResult">
+        <include refid="selectWxMyhomeSignVo"/>
+        <where>  
+            <if test="signOpenid != null  and signOpenid != ''"> and sign_openid = #{signOpenid}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxMyhomeSignById" parameterType="Long" resultMap="WxMyhomeSignResult">
+        <include refid="selectWxMyhomeSignVo"/>
+        where sign_id = #{signId}
+    </select>
+        
+    <insert id="insertWxMyhomeSign" parameterType="com.ruoyi.wechatapi.myhome.domain.WxMyhomeSign" useGeneratedKeys="true" keyProperty="signId">
+        insert into wx_myhome_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="signOpenid != null  and signOpenid != ''">sign_openid,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="signDay != null  and signDay != ''">sign_day,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="signOpenid != null  and signOpenid != ''">#{signOpenid},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="signDay != null  and signDay != ''">#{signDay},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxMyhomeSign" parameterType="com.ruoyi.wechatapi.myhome.domain.WxMyhomeSign">
+        update wx_myhome_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="signOpenid != null  and signOpenid != ''">sign_openid = #{signOpenid},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+            <if test="signDay != null  and signDay != ''">sign_day = #{signDay},</if>
+            <if test="sign1 != null  and sign1 != ''">sign1 = #{sign1},</if>
+            <if test="sign2 != null  and sign2 != ''">sign2 = #{sign2},</if>
+            <if test="sign3 != null  and sign3 != ''">sign3 = #{sign3},</if>
+        </trim>
+        where sign_id = #{signId}
+    </update>
+
+    <delete id="deleteWxMyhomeSignById" parameterType="Long">
+        delete from wx_myhome_sign where sign_id = #{signId}
+    </delete>
+
+    <delete id="deleteWxMyhomeSignByIds" parameterType="String">
+        delete from wx_myhome_sign where sign_id in 
+        <foreach item="signId" collection="array" open="(" separator="," close=")">
+            #{signId}
+        </foreach>
+    </delete>
+    
+</mapper>

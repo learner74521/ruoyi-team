@@ -2,7 +2,6 @@ package com.ruoyi.wechatapi.discover.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.wechatapi.discover.domain.WxDiscoverStatistics;
 import com.ruoyi.wechatapi.discover.mapper.WxDiscoverReplyMapper;
 import com.ruoyi.wechatapi.discover.mapper.WxDiscoverStatisticsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +39,10 @@ public class WxDiscoverCommentServiceImpl implements IWxDiscoverCommentService
     public List<WxDiscoverComment> selectWxDiscoverCommentById(Long contentId)
     {
         List<WxDiscoverComment> wxDiscoverCommentList=wxDiscoverCommentMapper.selectWxDiscoverCommentById(contentId);
-        for (WxDiscoverComment item:wxDiscoverCommentList) {
-           item.setWxDiscoverReplyList(wxDiscoverReplyMapper.selectWxDiscoverReplyById(item.getCommentId()));
-        }
-        System.out.println(wxDiscoverCommentList);
+        System.out.println(111);
+//        for (WxDiscoverComment item:wxDiscoverCommentList) {
+//           item.setWxDiscoverReplyList(wxDiscoverReplyMapper.selectWxDiscoverReplyById(item.getCommentId()));
+//        }
         return wxDiscoverCommentList;
     }
 
@@ -56,7 +55,13 @@ public class WxDiscoverCommentServiceImpl implements IWxDiscoverCommentService
     @Override
     public List<WxDiscoverComment> selectWxDiscoverCommentList(WxDiscoverComment wxDiscoverComment)
     {
-        return wxDiscoverCommentMapper.selectWxDiscoverCommentList(wxDiscoverComment);
+        List<WxDiscoverComment> wxDiscoverCommentList=wxDiscoverCommentMapper.selectWxDiscoverCommentList(wxDiscoverComment);
+
+        for (WxDiscoverComment item:wxDiscoverCommentList) {
+
+            item.setWxDiscoverReplyList(wxDiscoverReplyMapper.selectWxDiscoverReplyById(item.getCommentId()));
+        }
+        return wxDiscoverCommentList;
     }
 
     /**

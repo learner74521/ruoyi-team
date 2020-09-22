@@ -3,7 +3,9 @@ package com.ruoyi.wechatapi.discover.mapper;
 import java.util.List;
 
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverArrayContent;
+import com.ruoyi.wechatapi.discover.domain.WxDiscoverCare;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverContent;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 发现区域的动态内容Mapper接口
@@ -29,6 +31,29 @@ public interface WxDiscoverContentMapper
      */
     public List<WxDiscoverContent> selectWxDiscoverContentList(WxDiscoverContent wxDiscoverContent);
 
+    /**
+     * 查询分页总条数
+     *
+     * @param wxDiscoverContent 发现区域的动态内容
+     * @return 分页总条数
+     */
+    public Integer selectWxDiscoverContentPage(WxDiscoverContent wxDiscoverContent);
+
+    /**
+     * 查询发现区域的动态内容列表
+     *
+     * @param careOpenidList 关注人集合
+     * @return 发现区域的动态内容集合
+     */
+    public List<WxDiscoverContent> selectWxDiscoverContentListByOpenid(@Param("Array")String[] careOpenidList);
+
+    /**
+     * 查询分页总条数
+     *
+     * @param careOpenidList 关注人集合
+     * @return 分页总条数
+     */
+    public Integer selectWxDiscoverContentPageByOpenid(@Param("Array")String[] careOpenidList);
     /**
      * 新增发现区域的动态内容
      * 

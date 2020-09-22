@@ -43,7 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectWxDiscoverReplyById" parameterType="Long" resultMap="WxDiscoverReplyResult">
         <include refid="selectWxDiscoverReplyVo"/>
-        where comment_id = #{commentId} order by d.reply_id desc
+        <where>
+        <if test="commentId != null "> and comment_id = #{commentId}</if>
+        </where>
+         order by d.reply_id desc
     </select>
 
     <select id="selectWxDiscoverReplyByCId" parameterType="Long" resultType="Long">

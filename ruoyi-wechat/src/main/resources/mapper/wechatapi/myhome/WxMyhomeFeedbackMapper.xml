@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.myhome.mapper.WxMyhomeFeedbackMapper">
+    
+    <resultMap type="WxMyhomeFeedback" id="WxMyhomeFeedbackResult">
+        <result property="feedbackId"    column="feedback_id"    />
+        <result property="feedbackUserOpenid"    column="feedback_user_openid"    />
+        <result property="feedbackText"    column="feedback_text"    />
+        <result property="feedbackImages"    column="feedback_images"    />
+    </resultMap>
+
+    <sql id="selectWxMyhomeFeedbackVo">
+        select feedback_id, feedback_user_openid, feedback_text, feedback_images from wx_myhome_feedback
+    </sql>
+
+    <select id="selectWxMyhomeFeedbackList" parameterType="WxMyhomeFeedback" resultMap="WxMyhomeFeedbackResult">
+        <include refid="selectWxMyhomeFeedbackVo"/>
+        <where>  
+            <if test="feedbackUserOpenid != null  and feedbackUserOpenid != ''"> and feedback_user_openid = #{feedbackUserOpenid}</if>
+            <if test="feedbackText != null  and feedbackText != ''"> and feedback_text = #{feedbackText}</if>
+            <if test="feedbackImages != null  and feedbackImages != ''"> and feedback_images = #{feedbackImages}</if>
+        </where>
+    </select>
+    
+    <select id="selectWxMyhomeFeedbackById" parameterType="Long" resultMap="WxMyhomeFeedbackResult">
+        <include refid="selectWxMyhomeFeedbackVo"/>
+        where feedback_id = #{feedbackId}
+    </select>
+        
+    <insert id="insertWxMyhomeFeedback" parameterType="WxMyhomeFeedback" useGeneratedKeys="true" keyProperty="feedbackId">
+        insert into wx_myhome_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="feedbackUserOpenid != null  and feedbackUserOpenid != ''">feedback_user_openid,</if>
+            <if test="feedbackText != null  and feedbackText != ''">feedback_text,</if>
+            <if test="feedbackImages != null  and feedbackImages != ''">feedback_images,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="feedbackUserOpenid != null  and feedbackUserOpenid != ''">#{feedbackUserOpenid},</if>
+            <if test="feedbackText != null  and feedbackText != ''">#{feedbackText},</if>
+            <if test="feedbackImages != null  and feedbackImages != ''">#{feedbackImages},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxMyhomeFeedback" parameterType="WxMyhomeFeedback">
+        update wx_myhome_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="feedbackUserOpenid != null  and feedbackUserOpenid != ''">feedback_user_openid = #{feedbackUserOpenid},</if>
+            <if test="feedbackText != null  and feedbackText != ''">feedback_text = #{feedbackText},</if>
+            <if test="feedbackImages != null  and feedbackImages != ''">feedback_images = #{feedbackImages},</if>
+        </trim>
+        where feedback_id = #{feedbackId}
+    </update>
+
+    <delete id="deleteWxMyhomeFeedbackById" parameterType="Long">
+        delete from wx_myhome_feedback where feedback_id = #{feedbackId}
+    </delete>
+
+    <delete id="deleteWxMyhomeFeedbackByIds" parameterType="String">
+        delete from wx_myhome_feedback where feedback_id in 
+        <foreach item="feedbackId" collection="array" open="(" separator="," close=")">
+            #{feedbackId}
+        </foreach>
+    </delete>
+    
+</mapper>

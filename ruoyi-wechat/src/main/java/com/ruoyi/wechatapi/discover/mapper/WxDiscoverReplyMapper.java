@@ -2,6 +2,7 @@ package com.ruoyi.wechatapi.discover.mapper;
 
 import java.util.List;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverReply;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 评论回复Mapper接口
@@ -17,7 +18,7 @@ public interface WxDiscoverReplyMapper
      * @param commentId 评论ID
      * @return 评论回复
      */
-    public List<WxDiscoverReply> selectWxDiscoverReplyById(Long commentId);
+    public List<WxDiscoverReply> selectWxDiscoverReplyById(@Param("commentId") Long commentId);
 
     /**
      * 查询评论回复

@@ -36,7 +36,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectWebSocketByRoomId" parameterType="Long" resultMap="WebSocketResult">
         <include refid="selectWebSocketVo"/>
         where news_room_id = #{newsRoomId}
+        order by news_id
     </select>
+
+<!--    <select id="selectCountWebSocketByRoomId" parameterType="Long" resultType="java.lang.Integer">-->
+<!--        select count(0) from wx_chat_news-->
+<!--        where news_room_id = #{newsRoomId}-->
+<!--    </select>-->
         
     <insert id="insertWebSocket" parameterType="com.ruoyi.websocket.domain.WebSocketMessage" useGeneratedKeys="true" keyProperty="newsId">
         insert into wx_chat_news

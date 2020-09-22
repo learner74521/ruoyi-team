@@ -19,6 +19,7 @@ public class WxDiscoverComment extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 评论id */
+    @Excel(name = "评论id")
     private Long commentId;
 
     /** 动态id */
@@ -54,15 +55,14 @@ public class WxDiscoverComment extends BaseEntity
     @Excel(name = "评论回复列表")
     private List<WxDiscoverReply> wxDiscoverReplyList;
 
-    public void setCommentId(Long commentId) 
-    {
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
         this.commentId = commentId;
     }
 
-    public Long getCommentId() 
-    {
-        return commentId;
-    }
     public void setContentId(Long contentId) 
     {
         this.contentId = contentId;

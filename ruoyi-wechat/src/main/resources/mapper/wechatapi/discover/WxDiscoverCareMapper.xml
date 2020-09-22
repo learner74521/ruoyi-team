@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.discover.mapper.WxDiscoverCareMapper">
+    
+    <resultMap type="WxDiscoverCare" id="WxDiscoverCareResult">
+        <result property="careId"    column="care_id"    />
+        <result property="createOpenid"    column="create_openid"    />
+        <result property="careOpenid"    column="care_openid"    />
+    </resultMap>
+
+    <sql id="selectWxDiscoverCareVo">
+        select care_id, create_openid, care_openid from wx_discover_care
+    </sql>
+
+    <select id="selectWxDiscoverCareList" parameterType="String" resultType="String">
+       select care_openid from wx_discover_care
+       where create_openid = #{createOpenid}
+    </select>
+
+    <select id="selectWxDiscoverCareById" parameterType="Long" resultMap="WxDiscoverCareResult">
+        <include refid="selectWxDiscoverCareVo"/>
+        where care_id = #{careId}
+    </select>
+
+    <insert id="insertWxDiscoverCare" parameterType="WxDiscoverCare" useGeneratedKeys="true" keyProperty="careId">
+        insert into wx_discover_care
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createOpenid != null  and createOpenid != ''">create_openid,</if>
+            <if test="careOpenid != null  and careOpenid != ''">care_openid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createOpenid != null  and createOpenid != ''">#{createOpenid},</if>
+            <if test="careOpenid != null  and careOpenid != ''">#{careOpenid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxDiscoverCare" parameterType="WxDiscoverCare">
+        update wx_discover_care
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createOpenid != null  and createOpenid != ''">create_openid = #{createOpenid},</if>
+            <if test="careOpenid != null  and careOpenid != ''">care_openid = #{careOpenid},</if>
+        </trim>
+        where care_id = #{careId}
+    </update>
+
+    <delete id="deleteWxDiscoverCareById" parameterType="Long">
+        delete from wx_discover_care where care_id = #{careId}
+    </delete>
+
+    <delete id="deleteWxDiscoverCareByIds" parameterType="String">
+        delete from wx_discover_care where care_id in 
+        <foreach item="careId" collection="array" open="(" separator="," close=")">
+            #{careId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteWxDiscoverCareByInfo" parameterType="WxDiscoverCare">
+        delete from wx_discover_care
+        <where>
+            <if test="createOpenid != null  and createOpenid != ''">and create_openid = #{createOpenid}</if>
+            <if test="careOpenid != null  and careOpenid != ''">and care_openid = #{careOpenid}</if>
+        </where>
+    </delete>
+    
+</mapper>

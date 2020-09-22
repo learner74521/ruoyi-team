@@ -1,5 +1,6 @@
 package com.ruoyi.wechatapi.discover.domain;
 
+import com.ruoyi.common.core.domain.PageEntity;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2020-08-09
  */
-public class WxDiscoverArrayContent extends BaseEntity
+public class WxDiscoverArrayContent extends PageEntity
 {
 
     private static final long serialVersionUID = 1L;
@@ -49,6 +50,18 @@ public class WxDiscoverArrayContent extends BaseEntity
     /** 动态内容图片数组 */
     @Excel(name = "动态内容图片数组")
     private List contentImages;
+
+
+    /** 所在城市 */
+    @Excel(name = "所在城市")
+    private String contentCity;
+
+    /** 地理位置 */
+    @Excel(name = "地理位置")
+    private String contentPosition;
+
+    /** 返回条数 */
+    private Integer pageTotal;
 
     /** 统计表 */
     @Excel(name = "统计表")
@@ -118,7 +131,21 @@ public class WxDiscoverArrayContent extends BaseEntity
     {
         return contentType;
     }
+    public String getContentCity() {
+        return contentCity;
+    }
 
+    public void setContentCity(String contentCity) {
+        this.contentCity = contentCity;
+    }
+
+    public String getContentPosition() {
+        return contentPosition;
+    }
+
+    public void setContentPosition(String contentPosition) {
+        this.contentPosition = contentPosition;
+    }
     public WxChatUserInfo getWxChatUserInfo() {
         return wxChatUserInfo;
     }
@@ -147,6 +174,13 @@ public class WxDiscoverArrayContent extends BaseEntity
     public void setStatus(Boolean status) {
         this.status = status;
     }
+    public Integer getPageTotal() {
+        return pageTotal;
+    }
+
+    public void setPageTotal(Integer pageTotal) {
+        this.pageTotal = pageTotal;
+    }
     public List getContentImages() {
         return contentImages;
     }
@@ -164,7 +198,10 @@ public class WxDiscoverArrayContent extends BaseEntity
                 .append("createTime", getCreateTime())
                 .append("contentLabel", getContentLabel())
                 .append("contentType", getContentType())
-                .append("Status", getStatus())
+                .append("status", getStatus())
+                .append("contentCity",getContentCity())
+                .append("pageTotal", getPageTotal())
+                .append("contentPosition",getContentPosition())
                 .append("WxChatUserInfo", getWxChatUserInfo())
                 .append("WxDiscoverStatistics", getWxDiscoverStatistics())
                 .append("WxDiscoverGood", getWxDiscoverGood())

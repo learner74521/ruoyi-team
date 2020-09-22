@@ -6,28 +6,66 @@
 
     <resultMap type="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" id="WxChatRoomResult">
         <id property="roomId"    column="room_id"    />
-        <result property="roomType"    column="room_type"    />
+        <result property="roomTypeId"    column="room_type_id"    />
         <result property="roomName"    column="room_name"    />
         <result property="roomNum"    column="room_num"    />
         <result property="createTime"    column="create_time"    />
-        <result property="creatorOpenid"    column="create_time"    />
-        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
-            <result property="creatorName"    column="wx_name"    />
-            <result property="creatorAvatar"    column="wx_avatar"    />
-        </association>
+        <result property="creatorOpenid"    column="creator_openid"    />
+        <result property="roomIntroduce" column="room_introduce"/>
+        <result property="endTime"  column="end_time"/>
+        <result property="roomSite" column="room_site"/>
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo" resultMap="WxChatUserInfoResult"/>
     </resultMap>
 
+    <resultMap type="com.ruoyi.wechatapi.wxchat.domain.WxchatRoomNews" id="WxChatRoomNewsResult">
+        <id property="roomId"    column="room_id"    />
+        <result property="roomTypeId"    column="room_type_id"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="roomNum"    column="room_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="creatorOpenid"    column="creator_openid"    />
+        <result property="roomIntroduce" column="room_introduce"/>
+        <result property="endTime"  column="end_time"/>
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo" resultMap="WxChatUserInfoResult"/>
+        <association property="wxChatUnread" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUnread" resultMap="WxChatUnreadResult"/>
+    </resultMap>
+
+    <resultMap id="WxChatUserInfoResult" type="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
+        <result property="creatorName"    column="wx_name"    />
+        <result property="creatorAvatar"    column="wx_avatar"    />
+    </resultMap>
+
+    <resultMap id="WxChatUnreadResult" type="com.ruoyi.wechatapi.wxchat.domain.WxChatUnread">
+        <result property="unreadNumber"    column="unread_number"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+
     <sql id="selectWxChatRoomVo">
-        select r.room_id, r.room_type, r.room_name, r.room_num, r.create_time,r.creator_openid,u.wx_name, u.wx_avatar from wx_chat_room r inner join wx_user u on  r.creator_openid = u.wx_openid
+        select r.room_id, r.room_type_id, r.room_name, r.room_num, r.create_time,r.creator_openid,
+         r.room_introduce,r.room_site, r.end_time,u.wx_name, u.wx_avatar
+        from wx_chat_room r
+        inner join wx_user u on  r.creator_openid = u.wx_openid
     </sql>
 
     <select id="selectWxChatRoomList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomResult">
         <include refid="selectWxChatRoomVo"/>
         <where>
-            <if test="roomType != null  and roomType != ''"> and r.room_type = #{roomType}</if>
+            <if test="roomTypeId != null  and roomTypeId != ''"> and r.room_type_id = #{roomTypeId}</if>
             <if test="roomName != null  and roomName != ''"> and r.room_name like concat('%', #{roomName}, '%')</if>
             <if test="roomNum != null  and roomNum != ''"> and r.room_num = #{roomNum}</if>
-            <if test="creatorOpenid != null  and creatorOpenid != ''"> and u.wx_openid = #{creatorOpenid}</if>
+            <if test="creatorOpenid != null  and creatorOpenid != ''"> and r.creator_openid = #{creatorOpenid}</if>
+        </where>
+    </select>
+
+    <select id="selectWxChatRoomNewsList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomNewsResult">
+        select r.room_id,r.room_type_id, r.room_name, r.room_num, r.create_time,r.creator_openid,
+        r.room_introduce, r.end_time,c.unread_number, c.update_time,u.wx_name, u.wx_avatar
+        from wx_chat_room r
+        inner join wx_user u on  r.creator_openid = u.wx_openid
+        inner join wx_chat_unread c on r.room_id=c.room_id
+        <where>
+            <if test="creatorOpenid != null  and creatorOpenid != ''"> and c.user_openid = #{creatorOpenid}</if>
         </where>
     </select>
 
@@ -36,42 +74,41 @@
         where r.room_id = #{roomId}
     </select>
 
-    <insert id="insertWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom">
+    <insert id="insertWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" useGeneratedKeys="true" keyProperty="roomId">
         insert into wx_chat_room
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="roomId != null ">room_id,</if>
-            <if test="roomType != null  and roomType != ''">room_type,</if>
+            <if test="roomTypeId != null  and roomTypeId != ''">room_type_id,</if>
             <if test="roomName != null  and roomName != ''">room_name,</if>
             <if test="roomNum != null  and roomNum != ''">room_num,</if>
+            <if test="roomSite != null  and roomSite != ''">room_site,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="creatorOpenid != null  and creatorOpenid != ''">creator_openid,</if>
-            <if test="creatorName != null  and creatorName != ''">creator_name,</if>
-            <if test="creatorAvatar != null  and creatorAvatar != ''">creator_avatar,</if>
+            <if test="roomIntroduce != null  and roomIntroduce != ''">room_introduce,</if>
             <if test="updateTime != null ">update_time,</if>
+            <if test="endTime != null ">end_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="roomId != null ">#{roomId},</if>
-            <if test="roomType != null  and roomType != ''">#{roomType},</if>
+            <if test="roomTypeId != null  and roomTypeId != ''">#{roomTypeId},</if>
             <if test="roomName != null  and roomName != ''">#{roomName},</if>
             <if test="roomNum != null  and roomNum != ''">#{roomNum},</if>
+            <if test="roomSite != null  and roomSite != ''">#{roomSite},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="creatorOpenid != null  and creatorOpenid != ''">#{creatorOpenid},</if>
-            <if test="creatorName != null  and creatorName != ''">#{creatorName},</if>
-            <if test="creatorAvatar != null  and creatorAvatar != ''">#{creatorAvatar},</if>
+            <if test="roomIntroduce != null  and roomIntroduce != ''">#{roomIntroduce},</if>
             <if test="updateTime != null ">#{updateTime},</if>
+            <if test="endTime != null ">#{endTime},</if>
         </trim>
     </insert>
 
     <update id="updateWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom">
         update wx_chat_room
         <trim prefix="SET" suffixOverrides=",">
-            <if test="roomType != null  and roomType != ''">room_type = #{roomType},</if>
+            <if test="roomTypeId != null  and roomTypeId != ''">room_type_id = #{roomTypeId},</if>
             <if test="roomName != null  and roomName != ''">room_name = #{roomName},</if>
             <if test="roomNum != null  and roomNum != ''">room_num = #{roomNum},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="creatorOpenid != null  and creatorOpenid != ''">creator_openid = #{creatorOpenid},</if>
-            <if test="creatorName != null  and creatorName != ''">creator_name = #{creatorName},</if>
-            <if test="creatorAvatar != null  and creatorAvatar != ''">creator_avatar = #{creatorAvatar},</if>
+            <if test="roomIntroduce != null  and roomIntroduce != ''">room_introduce = #{roomIntroduce},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
         </trim>
         where room_id = #{roomId}

@@ -27,11 +27,6 @@ public class WxUserApiController extends BaseController
     @Autowired
     private IWxUserApiService wxUserApiService;
 
-    @PostMapping("/post")
-    public WxUserApi wechatapi(@RequestBody WxUserApi wxUserApi) throws UnsupportedEncodingException {
-        System.out.println(wxUserApi);
-        return wxUserApi;
-    }
 
     /**
      * 查询微信用户列表
@@ -62,6 +57,15 @@ public class WxUserApiController extends BaseController
     public AjaxResult editSave(@RequestBody WxUserApi wxUserApi)
     {
         return toAjax(wxUserApiService.updateWxUserApi(wxUserApi));
+    }
+
+    /**
+     * 修改微信用户上下线
+     */
+    @PostMapping("/online")
+    public AjaxResult onlineSave(@RequestBody WxUserApi wxUserApi)
+    {
+        return toAjax(wxUserApiService.updateWxUserOnlineApi(wxUserApi));
     }
 
     /**

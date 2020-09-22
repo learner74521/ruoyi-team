@@ -2,6 +2,7 @@ package com.ruoyi.wechatapi.wxchat.mapper;
 
 import java.util.List;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatPeople;
+import com.ruoyi.wechatapi.wxchat.domain.WxChatUnread;
 
 /**
  * 聊天室人员信息Mapper接口
@@ -26,6 +27,14 @@ public interface WxChatPeopleMapper
      * @return 聊天室人员信息集合
      */
     public List<WxChatPeople> selectWxChatPeopleList(WxChatPeople wxChatPeople);
+
+    /**
+     * 查询聊天室人员人数
+     *
+     * @param roomId 聊天室人员人数
+     * @return 聊天室人员人数
+     */
+     public Integer selectWxChatPeopleByRoomId(Long roomId);
 
     /**
      * 新增聊天室人员信息

@@ -42,7 +42,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectWxDiscoverCommentById" parameterType="Long" resultMap="WxDiscoverCommentResult">
         <include refid="selectWxDiscoverCommentVo"/>
-        where content_id = #{contentId} order by d.comment_id desc
+        where d.content_id = #{contentId}
+        order by d.comment_id desc
     </select>
 
     <select id="selectWxDiscoverCommentByCId" parameterType="Long" resultType="Long">

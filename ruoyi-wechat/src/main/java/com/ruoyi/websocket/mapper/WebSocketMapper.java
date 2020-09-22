@@ -19,6 +19,15 @@ public interface WebSocketMapper
      */
     public List<WebSocketMessage> selectWebSocketByRoomId(Long roomId);
 
+
+    /**
+     * 查询聊天室聊天内容数量
+     *
+     * @param  roomId  聊天室房间ID
+     * @return 聊天室聊天内容数量
+     */
+//    public Integer selectCountWebSocketByRoomId(Long roomId);
+
     /**
      * 查询聊天室聊天内容列表
      *

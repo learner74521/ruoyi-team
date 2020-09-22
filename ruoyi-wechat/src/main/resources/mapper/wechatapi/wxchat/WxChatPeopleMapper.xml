@@ -22,7 +22,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="peopleRoomId != null "> and people_room_id = #{peopleRoomId}</if>
         </where>
     </select>
-    
+
+    <select id="selectWxChatPeopleByRoomId" parameterType="Long" resultType="java.lang.Integer">
+        select count(people_room_id) from wx_chat_people where people_room_id = #{peopleRoomId}
+    </select>
+
     <select id="selectWxChatPeopleById" parameterType="Long" resultMap="WxChatPeopleResult">
         <include refid="selectWxChatPeopleVo"/>
         where people_id = #{peopleId}
@@ -43,6 +47,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateWxChatPeople" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatPeople">
+        update wx_chat_people
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="peopleOpenid != null  and peopleOpenid != ''">people_openid = #{peopleOpenid},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="peopleRoomId != null ">people_room_id = #{peopleRoomId},</if>
+        </trim>
+        where people_id = #{peopleId}
+    </update>
+
+    <update id="reduceWxChatUnread" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatPeople">
         update wx_chat_people
         <trim prefix="SET" suffixOverrides=",">
             <if test="peopleOpenid != null  and peopleOpenid != ''">people_openid = #{peopleOpenid},</if>

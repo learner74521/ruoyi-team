@@ -34,6 +34,7 @@ public class WxDiscoverCommentController extends BaseController
     @ResponseBody
     public TableDataInfo jsonById(@RequestBody Long contentId)
     {
+
         startPage();
         List<WxDiscoverComment> list = wxDiscoverCommentService.selectWxDiscoverCommentById(contentId);
         return getDataTable(list);
@@ -93,6 +94,4 @@ public class WxDiscoverCommentController extends BaseController
     {
         return toAjax(wxDiscoverCommentService.deleteWxDiscoverCommentById(commentId));
     }
-
-
 }

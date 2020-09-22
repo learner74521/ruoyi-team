@@ -13,6 +13,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="contentLabel"    column="content_label"    />
         <result property="contentType"    column="content_type"    />
         <result property="contentImages"    column="content_images"    />
+        <result property="contentCity"      column="content_city" />
+        <result property="contentPosition"   column="content_position" />
         <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
             <result property="creatorName"    column="wx_name"    />
             <result property="creatorAvatar"    column="wx_avatar"    />
@@ -30,8 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWxDiscoverContentVo">
-        select d.content_id, d.content_user_openid, d.content_text,  d.content_video, d.create_time, d.content_label, d.content_type, d.content_images,
-        u.wx_name, u.wx_avatar,s.statistics_look_num, s.statistics_good_num, s.statistics_comment_num, g.good_user_openid, g.status, g.good_type
+        select d.content_id, d.content_user_openid, d.content_text, d.content_video, d.create_time, d.content_label, d.content_type, d.content_images,
+        d.content_city,d.content_position,u.wx_name, u.wx_avatar,s.statistics_look_num, s.statistics_good_num, s.statistics_comment_num, g.good_user_openid, g.status, g.good_type
         from wx_discover_content d
         left join wx_user u on d.content_user_openid = u.wx_openid
         left join wx_discover_statistics s on d.content_id = s.content_id
@@ -41,11 +43,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectWxDiscoverContentList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverContent" resultMap="WxDiscoverContentResult">
         <include refid="selectWxDiscoverContentVo"/>
         <where>
-            <if test="contentLabel != null  and contentLabel != ''"> and content_label = #{contentLabel}</if>
+            <if test="contentCity != null  and contentCity != ''"> and content_city = #{contentCity}</if>
         </where>
         order by d.content_id desc
     </select>
-    
+
+    <select id="selectWxDiscoverContentPage" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverContent" resultType="java.lang.Integer">
+        select count(0) from wx_discover_content
+        <where>
+            <if test="contentCity != null  and contentCity != ''"> and content_city = #{contentCity}</if>
+        </where>
+    </select>
+
+    <select id="selectWxDiscoverContentListByOpenid" parameterType="String" resultMap="WxDiscoverContentResult">
+        <include refid="selectWxDiscoverContentVo"/>
+        <where>
+            <if test="Array.length!=0"> and d.content_user_openid in</if>
+        </where>
+        <foreach collection="Array" item="careOpenid" index="index" open="(" close=")" separator=",">
+            <if test="Array.length!=0">#{careOpenid}</if>
+        </foreach>
+        order by d.content_id desc
+    </select>
+
+    <select id="selectWxDiscoverContentPageByOpenid" parameterType="String" resultType="java.lang.Integer">
+        select count(0) from wx_discover_content
+        <where>
+            <if test="Array.length!=0"> and content_user_openid in</if>
+        </where>
+        <foreach collection="Array" item="careOpenid" index="index" open="(" close=")" separator=",">
+            <if test="Array.length!=0">#{careOpenid}</if>
+        </foreach>
+    </select>
+
     <select id="selectWxDiscoverContentById" parameterType="Long" resultMap="WxDiscoverContentResult">
         <include refid="selectWxDiscoverContentVo"/>
         where content_id = #{contentId}
@@ -61,6 +91,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contentLabel != null  and contentLabel != ''">content_label,</if>
             <if test="contentType != null  and contentType != ''">content_type,</if>
             <if test="contentImages != null  and contentImages != ''">content_images,</if>
+            <if test="contentCity !=null and contentCity!=''">content_city,</if>
+            <if test="contentPosition !=null and contentPosition!=''">content_position,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="contentUserOpenid != null  and contentUserOpenid != ''">#{contentUserOpenid},</if>
@@ -70,6 +102,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contentLabel != null  and contentLabel != ''">#{contentLabel},</if>
             <if test="contentType != null  and contentType != ''">#{contentType},</if>
             <if test="contentImages != null  and contentImages != ''">#{contentImages},</if>
+            <if test="contentCity !=null and contentCity!=''">#{contentCity},</if>
+            <if test="contentPosition !=null and contentPosition!=''">#{contentPosition},</if>
          </trim>
     </insert>
 

@@ -17,7 +17,7 @@ public interface WxUserApiMapper
      * @param wxOpenid 微信用户ID
      * @return 微信用户
      */
-    public WxUserApi selectWxUserApiById(String wxOpenid);
+    public Integer selectWxUserApiById(String wxOpenid);
 
     /**
      * 查询微信用户列表
@@ -42,6 +42,14 @@ public interface WxUserApiMapper
      * @return 结果
      */
     public int updateWxUserApi(WxUserApi wxUserApi);
+
+    /**
+     * 修改微信用户上下线
+     *
+     * @param wxUserApi 微信用户
+     * @return 结果
+     */
+    public int updateWxUserOnlineApi(WxUserApi wxUserApi);
 
     /**
      * 删除微信用户

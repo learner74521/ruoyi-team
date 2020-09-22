@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.wxchat.mapper.InterestUserMapper">
+    
+    <resultMap type="InterestUser" id="InterestUserResult">
+        <result property="interestUserid"    column="interest_userId"    />
+        <result property="interestOpenid"    column="interest_openid"    />
+        <result property="interestId"    column="interest_id"    />
+        <result property="interestGamename"    column="interest_gameName"    />
+        <result property="interestModel"    column="interest_model"    />
+        <result property="interestGamenameNd"    column="interest_gameName_nd"    />
+        <result property="interestModelNd"    column="interest_model_nd"    />
+    </resultMap>
+
+    <sql id="selectInterestUserVo">
+        select interest_userId, interest_openid, interest_id, interest_gameName, interest_model, interest_gameName_nd, interest_model_nd from interest_user
+    </sql>
+
+    <select id="selectInterestUserList" parameterType="InterestUser" resultMap="InterestUserResult">
+        <include refid="selectInterestUserVo"/>
+        <where>  
+            <if test="interestOpenid != null  and interestOpenid != ''"> and interest_openid = #{interestOpenid}</if>
+            <if test="interestId != null "> and interest_id = #{interestId}</if>
+            <if test="interestGamename != null  and interestGamename != ''"> and interest_gameName like concat('%', #{interestGamename}, '%')</if>
+            <if test="interestModel != null  and interestModel != ''"> and interest_model = #{interestModel}</if>
+            <if test="interestGamenameNd != null  and interestGamenameNd != ''"> and interest_gameName_nd = #{interestGamenameNd}</if>
+            <if test="interestModelNd != null  and interestModelNd != ''"> and interest_model_nd = #{interestModelNd}</if>
+        </where>
+    </select>
+    
+    <select id="selectInterestUserById" parameterType="String" resultType="java.lang.Integer">
+       select 1 from interest_user
+      where interest_openid = #{interestOpenid}
+    </select>
+        
+    <insert id="insertInterestUser" parameterType="InterestUser" useGeneratedKeys="true" keyProperty="interestUserid">
+        insert into interest_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="interestOpenid != null  and interestOpenid != ''">interest_openid,</if>
+            <if test="interestId != null ">interest_id,</if>
+            <if test="interestGamename != null  and interestGamename != ''">interest_gameName,</if>
+            <if test="interestModel != null  and interestModel != ''">interest_model,</if>
+            <if test="interestGamenameNd != null  and interestGamenameNd != ''">interest_gameName_nd,</if>
+            <if test="interestModelNd != null  and interestModelNd != ''">interest_model_nd,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="interestOpenid != null  and interestOpenid != ''">#{interestOpenid},</if>
+            <if test="interestId != null ">#{interestId},</if>
+            <if test="interestGamename != null  and interestGamename != ''">#{interestGamename},</if>
+            <if test="interestModel != null  and interestModel != ''">#{interestModel},</if>
+            <if test="interestGamenameNd != null  and interestGamenameNd != ''">#{interestGamenameNd},</if>
+            <if test="interestModelNd != null  and interestModelNd != ''">#{interestModelNd},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInterestUser" parameterType="InterestUser">
+        update interest_user
+        set interest_id = #{interestId},
+            interest_gameName = #{interestGamename},
+            interest_model = #{interestModel},
+            interest_gameName_nd = #{interestGamenameNd},
+            interest_model_nd = #{interestModelNd}
+        where interest_openid = #{interestOpenid}
+    </update>
+
+    <delete id="deleteInterestUserById" parameterType="Long">
+        delete from interest_user where interest_userId = #{interestUserid}
+    </delete>
+
+    <delete id="deleteInterestUserByIds" parameterType="String">
+        delete from interest_user where interest_userId in 
+        <foreach item="interestUserid" collection="array" open="(" separator="," close=")">
+            #{interestUserid}
+        </foreach>
+    </delete>
+    
+</mapper>

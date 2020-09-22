@@ -2,6 +2,7 @@ package com.ruoyi.wechatapi.discover.mapper;
 
 import java.util.List;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverComment;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 动态评论Mapper接口

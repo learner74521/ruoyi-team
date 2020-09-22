@@ -2,6 +2,7 @@ package com.ruoyi.wechatapi.wxchat.service;
 
 import java.util.List;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatRoom;
+import com.ruoyi.wechatapi.wxchat.domain.WxchatRoomNews;
 
 /**
  * 聊天室信息Service接口
@@ -26,6 +27,14 @@ public interface IWxChatRoomService
      * @return 聊天室信息集合
      */
     public List<WxChatRoom> selectWxChatRoomList(WxChatRoom wxChatRoom);
+
+    /**
+     * 查询聊天室信息列表
+     *
+     * @param wxChatRoom 聊天室信息
+     * @return 聊天室信息集合
+     */
+    public List<WxchatRoomNews> selectWxChatRoomNewsList(WxChatRoom wxChatRoom);
 
     /**
      * 新增聊天室信息
