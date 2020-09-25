@@ -51,11 +51,38 @@
     <select id="selectWxChatRoomList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomResult">
         <include refid="selectWxChatRoomVo"/>
         <where>
-            <if test="roomTypeId != null  and roomTypeId != ''"> and r.room_type_id = #{roomTypeId}</if>
-            <if test="roomName != null  and roomName != ''"> and r.room_name like concat('%', #{roomName}, '%')</if>
-            <if test="roomNum != null  and roomNum != ''"> and r.room_num = #{roomNum}</if>
+            <if test="roomTypeId != null "> and r.room_type_id = #{roomTypeId}</if>
+            <if test="creatorOpenid != null  and creatorOpenid != ''"> and r.creator_openid != #{creatorOpenid}</if>
+        </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="selectWxChatRoomListByCreator" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomResult">
+        <include refid="selectWxChatRoomVo"/>
+        <where>
             <if test="creatorOpenid != null  and creatorOpenid != ''"> and r.creator_openid = #{creatorOpenid}</if>
         </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="selectWxChatRoomListByPeople" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomResult">
+        select r.room_id,r.room_type_id, r.room_name, r.room_num, r.create_time,r.creator_openid,
+        r.room_introduce, r.end_time,u.wx_name, u.wx_avatar
+        from wx_chat_room r
+        inner join wx_user u on  r.creator_openid = u.wx_openid
+        inner join wx_chat_people c on r.room_id=c.people_room_id
+        <where>
+            <if test="creatorOpenid != null  and creatorOpenid != ''"> and c.people_openid = #{creatorOpenid}</if>
+        </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="selectWxChatRoomListBySearch" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomResult">
+        <include refid="selectWxChatRoomVo"/>
+        <where>
+            <if test="roomName != null  and roomName != ''"> and r.room_name like concat('%', #{roomName}, '%') or r.room_id =#{roomName}</if>
+        </where>
+        order by r.create_time desc
     </select>
 
     <select id="selectWxChatRoomNewsList" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" resultMap="WxChatRoomNewsResult">
@@ -67,6 +94,7 @@
         <where>
             <if test="creatorOpenid != null  and creatorOpenid != ''"> and c.user_openid = #{creatorOpenid}</if>
         </where>
+        order by c.update_time desc
     </select>
 
     <select id="selectWxChatRoomById" parameterType="Long" resultMap="WxChatRoomResult">
@@ -77,7 +105,7 @@
     <insert id="insertWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom" useGeneratedKeys="true" keyProperty="roomId">
         insert into wx_chat_room
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="roomTypeId != null  and roomTypeId != ''">room_type_id,</if>
+            <if test="roomTypeId != null ">room_type_id,</if>
             <if test="roomName != null  and roomName != ''">room_name,</if>
             <if test="roomNum != null  and roomNum != ''">room_num,</if>
             <if test="roomSite != null  and roomSite != ''">room_site,</if>
@@ -88,7 +116,7 @@
             <if test="endTime != null ">end_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="roomTypeId != null  and roomTypeId != ''">#{roomTypeId},</if>
+            <if test="roomTypeId != null">#{roomTypeId},</if>
             <if test="roomName != null  and roomName != ''">#{roomName},</if>
             <if test="roomNum != null  and roomNum != ''">#{roomNum},</if>
             <if test="roomSite != null  and roomSite != ''">#{roomSite},</if>
@@ -103,7 +131,7 @@
     <update id="updateWxChatRoom" parameterType="com.ruoyi.wechatapi.wxchat.domain.WxChatRoom">
         update wx_chat_room
         <trim prefix="SET" suffixOverrides=",">
-            <if test="roomTypeId != null  and roomTypeId != ''">room_type_id = #{roomTypeId},</if>
+            <if test="roomTypeId != null">room_type_id = #{roomTypeId},</if>
             <if test="roomName != null  and roomName != ''">room_name = #{roomName},</if>
             <if test="roomNum != null  and roomNum != ''">room_num = #{roomNum},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>

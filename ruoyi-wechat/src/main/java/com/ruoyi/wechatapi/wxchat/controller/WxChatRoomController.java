@@ -31,24 +31,58 @@ public class WxChatRoomController extends BaseController
     @Autowired
     private IWxChatRoomService wxChatRoomService;
 
+
     /**
-     * 查询聊天室信息
+     * 查询聊天室信息排除已加入
      */
     @PostMapping("/list")
     public TableDataInfo list(@RequestBody WxChatRoom wxChatRoom)
     {
-        startPage();
+        startPage(wxChatRoom);
         List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomList(wxChatRoom);
         return getDataTable(list);
     }
 
     /**
-     * 查询聊天室信息
+     * 查询聊天室信息通过创建人
      */
-    @PostMapping("/roomList")
-    public TableDataInfo roomList(@RequestBody WxChatRoom wxChatRoom)
+    @PostMapping("/listByCreator")
+    public TableDataInfo userList(@RequestBody WxChatRoom wxChatRoom)
     {
-        startPage();
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomListByCreator(wxChatRoom);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询聊天室信息通过成员表
+     */
+    @PostMapping("/listByPeople")
+    public TableDataInfo listByPeople(@RequestBody WxChatRoom wxChatRoom)
+    {
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomListByPeople(wxChatRoom);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询聊天室信息通过搜索
+     */
+    @PostMapping("/listBySearch")
+    public TableDataInfo listBySearch(@RequestBody WxChatRoom wxChatRoom)
+    {
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomListBySearch(wxChatRoom);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询自己所在聊天室信息
+     */
+    @PostMapping("/chatRoomList")
+    public TableDataInfo chatRoomList(@RequestBody WxChatRoom wxChatRoom)
+    {
+        startPage(wxChatRoom);
         List<WxchatRoomNews> list=wxChatRoomService.selectWxChatRoomNewsList(wxChatRoom);
         return getDataTable(list);
     }

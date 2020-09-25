@@ -48,7 +48,7 @@
     </update>
 
     <update id="reduceWxChatUnread" parameterType="WxChatUnread">
-        update wx_chat_unread set unread_number = 0, update_time = #{updateTime}
+        update wx_chat_unread set unread_number = 0
         where room_id = #{roomId} and user_openid = #{userOpenid}
     </update>
 

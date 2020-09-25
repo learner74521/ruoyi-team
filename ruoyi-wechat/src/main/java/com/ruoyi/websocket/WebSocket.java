@@ -265,7 +265,7 @@ public class WebSocket extends BaseController {
             //通知聊天室人员未读消息数
             wxChatUnreadService.updateWxChatUnread(wxChatUnread);
             messageList.add(webSocketMessage);
-            System.out.println(webSocketMessage);
+
             //如果不是发给所有，那么就发给某一个人
             //messageType 1代表上线 2代表下线 3代表在线名单 4代表普通消息
             Map<String,Object> map1 = new HashMap<>(16);

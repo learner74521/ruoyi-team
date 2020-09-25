@@ -58,6 +58,7 @@ public class WxChatPeopleServiceImpl implements IWxChatPeopleService
     @Override
     public int insertWxChatPeople(WxChatPeople wxChatPeople)
     {
+        System.out.println(wxChatPeople);
         WxChatUnread wxChatUnread=new WxChatUnread();
         wxChatUnread.setUserOpenid(wxChatPeople.getPeopleOpenid());
         wxChatUnread.setRoomId(wxChatPeople.getPeopleRoomId());

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.utils.Uuid;
+import com.ruoyi.wechatapi.wxchat.domain.WxChatPeople;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatUnread;
 import com.ruoyi.wechatapi.wxchat.domain.WxchatRoomNews;
 import com.ruoyi.wechatapi.wxchat.mapper.WxChatPeopleMapper;
@@ -62,6 +63,51 @@ public class WxChatRoomServiceImpl implements IWxChatRoomService
     }
 
     /**
+     * 查询聊天室信息通过创建人
+     *
+     * @param wxChatRoom 聊天室信息
+     * @return 聊天室信息集合
+     */
+    public List<WxChatRoom> selectWxChatRoomListByCreator(WxChatRoom wxChatRoom){
+        List<WxChatRoom> wxChatRoomList = wxChatRoomMapper.selectWxChatRoomListByCreator(wxChatRoom);
+        for (WxChatRoom item:wxChatRoomList) {
+            item.setMemberNum(wxChatPeopleMapper.selectWxChatPeopleByRoomId(item.getRoomId()));
+        }
+        return wxChatRoomList;
+    }
+
+    /**
+     * 查询聊天室信息列表通过成员表
+     *
+     * @param wxChatRoom 聊天室信息
+     * @return 聊天室信息集合
+     */
+    public List<WxChatRoom> selectWxChatRoomListByPeople(WxChatRoom wxChatRoom){
+        WxChatPeople wxChatPeople=new WxChatPeople();
+        wxChatPeople.setPeopleOpenid(wxChatRoom.getCreatorOpenid());
+        wxChatPeopleMapper.selectWxChatPeopleList(wxChatPeople);
+        List<WxChatRoom> wxChatRoomList = wxChatRoomMapper.selectWxChatRoomListByPeople(wxChatRoom);
+        for (WxChatRoom item:wxChatRoomList) {
+            item.setMemberNum(wxChatPeopleMapper.selectWxChatPeopleByRoomId(item.getRoomId()));
+        }
+        return wxChatRoomList;
+    }
+
+    /**
+     * 查询聊天室信息通过搜索
+     *
+     * @param wxChatRoom 聊天室信息
+     * @return 聊天室信息集合
+     */
+    public List<WxChatRoom> selectWxChatRoomListBySearch(WxChatRoom wxChatRoom){
+        List<WxChatRoom> wxChatRoomList = wxChatRoomMapper.selectWxChatRoomListBySearch(wxChatRoom);
+        for (WxChatRoom item:wxChatRoomList) {
+            item.setMemberNum(wxChatPeopleMapper.selectWxChatPeopleByRoomId(item.getRoomId()));
+        }
+        return wxChatRoomList;
+    }
+
+    /**
      * 查询聊天室信息列表
      *
      * @param wxChatRoom 聊天室信息
@@ -82,10 +128,7 @@ public class WxChatRoomServiceImpl implements IWxChatRoomService
     @Override
     public int insertWxChatRoom(WxChatRoom wxChatRoom)
     {
-        //生成房间号
-        Uuid uuid=new Uuid();
-        String roomNum=uuid.generateShortUuid();
-        wxChatRoom.setRoomNum(roomNum);
+
         wxChatRoom.setCreateTime(DateUtils.getNowDate());
         wxChatRoomMapper.insertWxChatRoom(wxChatRoom);
         WxChatUnread wxChatUnread=new WxChatUnread();

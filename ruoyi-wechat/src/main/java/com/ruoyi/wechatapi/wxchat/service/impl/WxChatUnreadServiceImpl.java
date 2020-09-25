@@ -91,7 +91,6 @@ public class WxChatUnreadServiceImpl implements IWxChatUnreadService
      * @return 结果
      */
     public int  reduceWxChatUnread(WxChatUnread wxChatUnread){
-        wxChatUnread.setUpdateTime(DateUtils.getNowDate());
         return wxChatUnreadMapper.reduceWxChatUnread(wxChatUnread);
     }
 

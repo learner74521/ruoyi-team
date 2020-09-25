@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectWxChatPeopleByRoomId" parameterType="Long" resultType="java.lang.Integer">
-        select count(people_room_id) from wx_chat_people where people_room_id = #{peopleRoomId}
+        select count(0) from wx_chat_people where people_room_id = #{peopleRoomId}
     </select>
 
     <select id="selectWxChatPeopleById" parameterType="Long" resultMap="WxChatPeopleResult">

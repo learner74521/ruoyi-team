@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.wechatapi.myhome.mapper.WxChatSysMapper">
+    
+    <resultMap type="WxChatSys" id="WxChatSysResult">
+        <result property="sysId"    column="sys_id"    />
+        <result property="sysName"    column="sys_name"    />
+        <result property="sysIntroduce"    column="sys_introduce"    />
+        <result property="sysImage"    column="sys_image"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="sysExist"    column="sys_exist"    />
+        <result property="sys1"    column="sys1"    />
+        <result property="sys2"    column="sys2"    />
+    </resultMap>
+
+    <sql id="selectWxChatSysVo">
+        select sys_id, sys_name, sys_introduce, sys_image, create_time, end_time, sys_exist, sys1, sys2 from wx_chat_sys
+    </sql>
+
+    <select id="selectWxChatSysList" parameterType="WxChatSys" resultMap="WxChatSysResult">
+        <include refid="selectWxChatSysVo"/>
+        <where>  
+            <if test="sysName != null  and sysName != ''"> and sys_name like concat('%', #{sysName}, '%')</if>
+            <if test="sysIntroduce != null  and sysIntroduce != ''"> and sys_introduce = #{sysIntroduce}</if>
+            <if test="sysImage != null  and sysImage != ''"> and sys_image = #{sysImage}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="sysExist != null "> and sys_exist = #{sysExist}</if>
+            <if test="sys1 != null  and sys1 != ''"> and sys1 = #{sys1}</if>
+            <if test="sys2 != null  and sys2 != ''"> and sys2 = #{sys2}</if>
+        </where>
+        order by sys_id desc
+    </select>
+    
+    <select id="selectWxChatSysById" parameterType="Long" resultMap="WxChatSysResult">
+        <include refid="selectWxChatSysVo"/>
+        where sys_id = #{sysId}
+    </select>
+        
+    <insert id="insertWxChatSys" parameterType="WxChatSys" useGeneratedKeys="true" keyProperty="sysId">
+        insert into wx_chat_sys
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+            <if test="sysIntroduce != null  and sysIntroduce != ''">sys_introduce,</if>
+            <if test="sysImage != null  and sysImage != ''">sys_image,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="endTime != null ">end_time,</if>
+            <if test="sysExist != null ">sys_exist,</if>
+            <if test="sys1 != null  and sys1 != ''">sys1,</if>
+            <if test="sys2 != null  and sys2 != ''">sys2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+            <if test="sysIntroduce != null  and sysIntroduce != ''">#{sysIntroduce},</if>
+            <if test="sysImage != null  and sysImage != ''">#{sysImage},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="endTime != null ">#{endTime},</if>
+            <if test="sysExist != null ">#{sysExist},</if>
+            <if test="sys1 != null  and sys1 != ''">#{sys1},</if>
+            <if test="sys2 != null  and sys2 != ''">#{sys2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWxChatSys" parameterType="WxChatSys">
+        update wx_chat_sys
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+            <if test="sysIntroduce != null  and sysIntroduce != ''">sys_introduce = #{sysIntroduce},</if>
+            <if test="sysImage != null  and sysImage != ''">sys_image = #{sysImage},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="endTime != null ">end_time = #{endTime},</if>
+            <if test="sysExist != null ">sys_exist = #{sysExist},</if>
+            <if test="sys1 != null  and sys1 != ''">sys1 = #{sys1},</if>
+            <if test="sys2 != null  and sys2 != ''">sys2 = #{sys2},</if>
+        </trim>
+        where sys_id = #{sysId}
+    </update>
+
+    <delete id="deleteWxChatSysById" parameterType="Long">
+        delete from wx_chat_sys where sys_id = #{sysId}
+    </delete>
+
+    <delete id="deleteWxChatSysByIds" parameterType="String">
+        delete from wx_chat_sys where sys_id in 
+        <foreach item="sysId" collection="array" open="(" separator="," close=")">
+            #{sysId}
+        </foreach>
+    </delete>
+    
+</mapper>
