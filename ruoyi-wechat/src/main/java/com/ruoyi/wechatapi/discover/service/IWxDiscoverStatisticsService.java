@@ -44,6 +44,14 @@ public interface IWxDiscoverStatisticsService
     public int updateWxDiscoverStatistics(WxDiscoverStatistics wxDiscoverStatistics);
 
     /**
+     * 增加动态的浏览量数量
+     *
+     * @param contentId 增加动态的浏览量数量
+     * @return 结果
+     */
+    public int updateAddLookStatistics(Long contentId);
+
+    /**
      * 批量删除动态的点赞，评论，浏览量数量统计
      * 
      * @param ids 需要删除的数据ID

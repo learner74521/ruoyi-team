@@ -3,6 +3,7 @@ package com.ruoyi.wechatapi.wxchat.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechatapi.wxchat.mapper.WxUserApiMapper;
@@ -28,7 +29,7 @@ public class WxUserApiServiceImpl implements IWxUserApiService {
      * @return 微信用户
      */
     @Override
-    public WxUserApi selectWxUserApiById(String wxOpenid) {
+    public Integer selectWxUserApiById(String wxOpenid) {
         return wxUserApiMapper.selectWxUserApiById(wxOpenid);
     }
 
@@ -51,8 +52,12 @@ public class WxUserApiServiceImpl implements IWxUserApiService {
      */
     @Override
     public int insertWxUserApi(WxUserApi wxUserApi) {
-        wxUserApi.setCreateTime(DateUtils.getNowDate());
-        return wxUserApiMapper.insertWxUserApi(wxUserApi);
+        Integer result=wxUserApiMapper.selectWxUserApiById(wxUserApi.getWxOpenid());
+        if (result==null){
+            wxUserApi.setCreateTime(DateUtils.getNowDate());
+            result=wxUserApiMapper.insertWxUserApi(wxUserApi);
+        }
+        return result;
     }
 
     /**
@@ -63,10 +68,30 @@ public class WxUserApiServiceImpl implements IWxUserApiService {
      */
     @Override
     public int updateWxUserApi(WxUserApi wxUserApi) {
-        wxUserApi.setUpdateTime(DateUtils.getNowDate());
-        return wxUserApiMapper.updateWxUserApi(wxUserApi);
+        List<WxUserApi> wxUserApiList=wxUserApiMapper.selectWxUserApiList(wxUserApi);
+        if(CollectionUtils.isEmpty(wxUserApiList)){
+            this.insertWxUserApi(wxUserApi);
+        }else {
+            for (WxUserApi item : wxUserApiList) {
+                if (!item.getWxAvatar().equals(wxUserApi.getWxAvatar()) || !item.getWxName().equals(wxUserApi.getWxName())) {
+                    wxUserApi.setUpdateTime(DateUtils.getNowDate());
+                    wxUserApiMapper.updateWxUserApi(wxUserApi);
+                }
+            }
+        }
+        return 1;
     }
 
+    /**
+     * 修改微信用户上下线
+     *
+     * @param wxUserApi 微信用户
+     * @return 结果
+     */
+    @Override
+    public int updateWxUserOnlineApi(WxUserApi wxUserApi){
+        return wxUserApiMapper.updateWxUserOnlineApi(wxUserApi);
+    }
     /**
      * 删除微信用户对象
      *

@@ -4,9 +4,13 @@ import com.alibaba.fastjson.JSON;
 
 
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.PageEntity;
 import com.ruoyi.websocket.domain.WebSocketMessage;
 import com.ruoyi.websocket.service.IWebSocketService;
 import com.ruoyi.websocket.utils.ApplicationContextRegister;
+import com.ruoyi.wechatapi.wxchat.domain.WxChatUnread;
+import com.ruoyi.wechatapi.wxchat.mapper.WxChatUnreadMapper;
+import com.ruoyi.wechatapi.wxchat.service.IWxChatUnreadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +90,9 @@ public class WebSocket extends BaseController {
     @Autowired
     private IWebSocketService webSocketService;
 
+    @Autowired
+    private IWxChatUnreadService wxChatUnreadService;
+
     /**
 
      * 建立连接
@@ -99,11 +106,11 @@ public class WebSocket extends BaseController {
     @OnOpen
 
     public void onOpen(@PathParam("wxOpenid") String wxOpenid,@PathParam("roomid") Long roomid, Session session){
+
         String userOpenid=wxOpenid;
         Long ToRoomId=roomid;
 
         try {
-
             userOpenid = new String(wxOpenid.getBytes("ISO-8859-1"),"utf-8");
 
         } catch (UnsupportedEncodingException e) {
@@ -120,9 +127,7 @@ public class WebSocket extends BaseController {
         System.out.println("现在来连接的客户id："+session.getId()+"用户名："+userOpenid);
 
         this.wxOpenid= userOpenid;
-
         this.session= session;
-
         this.roomId= ToRoomId;
         System.out.println("有新连接加入！ 当前在线人数" + onlineNumber);
 
@@ -131,28 +136,31 @@ public class WebSocket extends BaseController {
             //messageType 1代表上线 2代表下线 3代表在线名单 4代表普通消息
             //先给所有人发送通知，说我上线了
 
-            Map<String,Object> map1 = new HashMap<>(16);
-
-            map1.put("messageType",1);
-            map1.put("wxOpenid",userOpenid);
-            map1.put("ToRoomId",ToRoomId);
-            sendMessageTo(JSON.toJSONString(map1),ToRoomId);
+//            Map<String,Object> map1 = new HashMap<>(16);
+//            map1.put("messageType",1);
+//            map1.put("wxOpenid",userOpenid);
+//            map1.put("ToRoomId",ToRoomId);
+//            sendMessageTo(JSON.toJSONString(map1),ToRoomId);
 
             //把自己的信息加入到map当中去
             clients.put(userOpenid, this);
 
-//            startPage();
             //websocket 使用service 层
             ApplicationContext act = ApplicationContextRegister.getApplicationContext();
             webSocketService=act.getBean(IWebSocketService.class);
+            wxChatUnreadService=act.getBean(IWxChatUnreadService.class);
+            //分页请求
+//            PageEntity pageEntity=new PageEntity();
+//            pageEntity.setPageNum(1);
+//            pageEntity.setPageSize(20);
+//            startPage(pageEntity);
             messageList= webSocketService.selectWebSocketByRoomId(roomId);
+
+
             //给自己发一条消息：告诉自己现在都有谁在线
-
             Map<String,Object> map2 = new HashMap<>(16);
-
             map2.put("messageType",3);
-            map2.put("newsList",messageList);
-
+            map2.put("newsList",getDataTable(messageList));
             //移除掉自己
             Set<String> set = clients.keySet();
             map2.put("onlineUsers",set);
@@ -173,7 +181,6 @@ public class WebSocket extends BaseController {
     public void onError(Session session, Throwable error) {
 
         logger.error("服务端发生了错误"+error.getMessage());
-
         error.printStackTrace();
 
     }
@@ -198,6 +205,12 @@ public class WebSocket extends BaseController {
 
         try {
 
+            //清空未读消息
+            WxChatUnread wxChatUnread=new WxChatUnread();
+            wxChatUnread.setRoomId(roomId);
+            wxChatUnread.setUserOpenid(wxOpenid);
+            System.out.println(wxChatUnread);
+            wxChatUnreadService.reduceWxChatUnread(wxChatUnread);
             //messageType 1代表上线 2代表下线 3代表在线名单 4代表普通消息
 
             Map<String,Object> map1 = new HashMap<>(16);
@@ -208,7 +221,7 @@ public class WebSocket extends BaseController {
 
             map1.put("wxOpenid",wxOpenid);
 
-            sendMessageTo(JSON.toJSONString(map1),roomId);
+            sendMessageToMe(JSON.toJSONString(map1),wxOpenid);
 
         }
 
@@ -241,24 +254,22 @@ public class WebSocket extends BaseController {
     {
 
         try {
-
             System.out.println("来自客户端消息：" + message+"客户端的id是："+session.getId());
-
-
             WebSocketMessage webSocketMessage = JSON.parseObject(message,WebSocketMessage.class);
-
+            WxChatUnread wxChatUnread=new WxChatUnread();
+            wxChatUnread.setRoomId(roomId);
+            wxChatUnread.setUserOpenid(wxOpenid);
             //进入server层
-            ApplicationContext act = ApplicationContextRegister.getApplicationContext();
-            webSocketService=act.getBean(IWebSocketService.class);
             webSocketService.insertWebSocket(webSocketMessage);
-            messageList.add(webSocketMessage);
-            System.out.println(webSocketMessage);
+            //通知聊天室人员未读消息数
+            wxChatUnreadService.updateWxChatUnread(wxChatUnread);
+            //消息列表
+            messageList= webSocketService.selectWebSocketByRoomId(roomId);
             //如果不是发给所有，那么就发给某一个人
-            //messageType 1代表上线 2代表下线 3代表在线名单  4代表普通消息
+            //messageType 1代表上线 2代表下线 3代表在线名单 4代表普通消息
             Map<String,Object> map1 = new HashMap<>(16);
-
             map1.put("messageType",4);
-            map1.put("newsList",messageList);
+            map1.put("newsList",getDataTable(messageList));
             sendMessageTo(JSON.toJSONString(map1),roomId);
 
 //            群发信息
@@ -297,7 +308,6 @@ public class WebSocket extends BaseController {
         for (WebSocket item : clients.values()) {
 
             if (item.wxOpenid.equals(ToUserOpenid)) {
-
                 item.session.getAsyncRemote().sendText(message);
                 break;
             }

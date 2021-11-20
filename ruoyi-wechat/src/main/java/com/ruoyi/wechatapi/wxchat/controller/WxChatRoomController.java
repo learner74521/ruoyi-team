@@ -2,6 +2,9 @@
 package com.ruoyi.wechatapi.wxchat.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.wechatapi.wxchat.domain.WxchatRoomNews;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,34 +27,64 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 @RequestMapping("/wechatapi/chatRoom")
 public class WxChatRoomController extends BaseController
 {
-    private String prefix = "wechatapi/chatRoom";
 
     @Autowired
     private IWxChatRoomService wxChatRoomService;
 
+
     /**
-     * 查询聊天室信息
+     * 分类查询全部聊天室信息
      */
     @PostMapping("/list")
-    public WxChatRoom list(@RequestParam Long roomId)
+    public TableDataInfo list(@RequestBody WxChatRoom wxChatRoom)
     {
-        System.out.println(roomId);
-        WxChatRoom jsonList = wxChatRoomService.selectWxChatRoomById(roomId);
-        System.out.println(jsonList);
-        return jsonList;
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomList(wxChatRoom);
+        return getDataTable(list);
     }
 
     /**
-     * 导出聊天室信息列表
+     * 查询聊天室信息通过创建人
      */
-    @RequiresPermissions("wechat:chatRoom:export")
-    @Log(title = "聊天室信息", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public AjaxResult export(WxChatRoom wxChatRoom)
+    @PostMapping("/listByCreator")
+    public TableDataInfo userList(@RequestBody WxChatRoom wxChatRoom)
     {
-        List<WxChatRoom> list = wxChatRoomService.selectWxChatRoomList(wxChatRoom);
-        ExcelUtil<WxChatRoom> util = new ExcelUtil<WxChatRoom>(WxChatRoom.class);
-        return util.exportExcel(list, "chatRoom");
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomListByCreator(wxChatRoom);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询聊天室信息通过成员表
+     */
+    @PostMapping("/listByPeople")
+    public TableDataInfo listByPeople(@RequestBody WxChatRoom wxChatRoom)
+    {
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomListByPeople(wxChatRoom);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询聊天室信息通过搜索
+     */
+    @PostMapping("/listBySearch")
+    public TableDataInfo listBySearch(@RequestBody WxChatRoom wxChatRoom)
+    {
+        startPage(wxChatRoom);
+        List<WxChatRoom> list=wxChatRoomService.selectWxChatRoomListBySearch(wxChatRoom);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询自己所在聊天室信息
+     */
+    @PostMapping("/chatRoomList")
+    public TableDataInfo chatRoomList(@RequestBody WxChatRoom wxChatRoom)
+    {
+        startPage(wxChatRoom);
+        List<WxchatRoomNews> list=wxChatRoomService.selectWxChatRoomNewsList(wxChatRoom);
+        return getDataTable(list);
     }
 
 
@@ -59,7 +92,7 @@ public class WxChatRoomController extends BaseController
      * 新增保存聊天室信息
      */
     @PostMapping("/add")
-    public AjaxResult addSave(WxChatRoom wxChatRoom)
+    public AjaxResult addSave(@RequestBody WxChatRoom wxChatRoom)
     {
         return toAjax(wxChatRoomService.insertWxChatRoom(wxChatRoom));
     }
@@ -71,7 +104,7 @@ public class WxChatRoomController extends BaseController
      */
 
     @PostMapping("/edit")
-    public AjaxResult editSave(WxChatRoom wxChatRoom)
+    public AjaxResult editSave(@RequestBody WxChatRoom wxChatRoom)
     {
         return toAjax(wxChatRoomService.updateWxChatRoom(wxChatRoom));
     }
@@ -80,8 +113,9 @@ public class WxChatRoomController extends BaseController
      * 删除聊天室信息
      */
     @PostMapping( "/remove")
-    public AjaxResult remove(Long roomId)
+    public AjaxResult remove(@RequestParam(value = "roomid") Long roomId)
     {
+        System.out.println(roomId);
         return toAjax(wxChatRoomService.deleteWxChatRoomById(roomId));
     }
 }

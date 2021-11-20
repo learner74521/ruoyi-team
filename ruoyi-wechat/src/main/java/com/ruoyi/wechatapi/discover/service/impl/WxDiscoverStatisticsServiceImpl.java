@@ -57,6 +57,35 @@ public class WxDiscoverStatisticsServiceImpl implements IWxDiscoverStatisticsSer
     }
 
     /**
+     * 增加动态的评论数量
+     *
+     * @param contentId 增加动态的评论数量
+     * @return 结果
+     */
+    public int updateAddCommentStatistics(Long contentId){
+        return wxDiscoverStatisticsMapper.updateAddCommentStatistics(contentId);
+    }
+
+    /**
+     * 增加动态的浏览量数量
+     *
+     * @param contentId 增加动态的浏览量数量
+     * @return 结果
+     */
+    public int updateAddLookStatistics(Long contentId){
+        return wxDiscoverStatisticsMapper.updateAddLookStatistics(contentId);
+    }
+
+    /**
+     * 减少动态的评论数量
+     *
+     * @param contentId 减少动态的评论数量
+     * @return 结果
+     */
+    public int updateReduceCommentStatistics(Long contentId){
+        return wxDiscoverStatisticsMapper.updateReduceCommentStatistics(contentId);
+    }
+    /**
      * 修改动态的点赞，评论，浏览量数量统计
      * 
      * @param wxDiscoverStatistics 动态的点赞，评论，浏览量数量统计

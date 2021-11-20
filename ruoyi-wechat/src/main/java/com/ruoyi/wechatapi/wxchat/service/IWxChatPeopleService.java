@@ -54,8 +54,8 @@ public interface IWxChatPeopleService
     /**
      * 删除聊天室人员信息信息
      * 
-     * @param peopleId 聊天室人员信息ID
+     * @param wxChatPeople 聊天室人员信息ID
      * @return 结果
      */
-    public int deleteWxChatPeopleById(Long peopleId);
+    public int deleteWxChatPeopleById(WxChatPeople wxChatPeople);
 }

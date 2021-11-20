@@ -14,10 +14,10 @@ public interface WxDiscoverStatisticsMapper
     /**
      * 查询动态的点赞，评论，浏览量数量统计
      * 
-     * @param statisticsId 动态的点赞，评论，浏览量数量统计ID
+     * @param contentId 动态的点赞，评论，浏览量数量统计ID
      * @return 动态的点赞，评论，浏览量数量统计
      */
-    public WxDiscoverStatistics selectWxDiscoverStatisticsById(Long statisticsId);
+    public WxDiscoverStatistics selectWxDiscoverStatisticsById(Long contentId);
 
     /**
      * 查询动态的点赞，评论，浏览量数量统计列表
@@ -35,9 +35,34 @@ public interface WxDiscoverStatisticsMapper
      */
     public int insertWxDiscoverStatistics(WxDiscoverStatistics wxDiscoverStatistics);
 
+
+    /**
+     * 增加动态的浏览量数量
+     *
+     * @param contentId 增加动态的浏览量数量
+     * @return 结果
+     */
+    public int updateAddLookStatistics(Long contentId);
+
+    /**
+     * 增加动态的评论数量
+     *
+     * @param contentId 增加动态的评论数量
+     * @return 结果
+     */
+    public int updateAddCommentStatistics(Long contentId);
+
+    /**
+     * 减少动态的评论数量
+     *
+     * @param contentId 减少动态的评论数量
+     * @return 结果
+     */
+    public int updateReduceCommentStatistics(Long contentId);
+
     /**
      * 修改动态的点赞，评论，浏览量数量统计
-     * 
+     *
      * @param wxDiscoverStatistics 动态的点赞，评论，浏览量数量统计
      * @return 结果
      */

@@ -1,5 +1,6 @@
 package com.ruoyi.wechatapi.discover.domain;
 
+import com.ruoyi.common.core.domain.PageEntity;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2020-08-09
  */
-public class WxDiscoverArrayContent extends BaseEntity
+public class WxDiscoverArrayContent extends PageEntity
 {
 
     private static final long serialVersionUID = 1L;
@@ -42,13 +43,38 @@ public class WxDiscoverArrayContent extends BaseEntity
     @Excel(name = "内容类型text_image 文字图片，text_video文字视频")
     private String contentType;
 
-    /** 创建人信息 */
-    @Excel(name = "创建人信息")
-    private WxChatUserInfo wxChatUserInfo;
+    /** 校验点赞状态（1点赞，2取消点赞） */
+    @Excel(name = "点赞状态")
+    private Boolean status=false;
 
     /** 动态内容图片数组 */
     @Excel(name = "动态内容图片数组")
     private List contentImages;
+
+
+    /** 所在城市 */
+    @Excel(name = "所在城市")
+    private String contentCity;
+
+    /** 地理位置 */
+    @Excel(name = "地理位置")
+    private String contentPosition;
+
+    /** 返回条数 */
+    private Integer pageTotal;
+
+    /** 统计表 */
+    @Excel(name = "统计表")
+    private WxDiscoverStatistics wxDiscoverStatistics;
+
+    /** 点赞表 */
+    @Excel(name = "点赞表")
+    private List<WxDiscoverGood> wxDiscoverGood;
+
+    /** 创建人信息 */
+    @Excel(name = "创建人信息")
+    private WxChatUserInfo wxChatUserInfo;
+
 
     public void setContentId(Long contentId)
     {
@@ -105,13 +131,55 @@ public class WxDiscoverArrayContent extends BaseEntity
     {
         return contentType;
     }
+    public String getContentCity() {
+        return contentCity;
+    }
 
+    public void setContentCity(String contentCity) {
+        this.contentCity = contentCity;
+    }
+
+    public String getContentPosition() {
+        return contentPosition;
+    }
+
+    public void setContentPosition(String contentPosition) {
+        this.contentPosition = contentPosition;
+    }
     public WxChatUserInfo getWxChatUserInfo() {
         return wxChatUserInfo;
     }
 
     public void setWxChatUserInfo(WxChatUserInfo wxChatUserInfo) {
         this.wxChatUserInfo = wxChatUserInfo;
+    }
+    public WxDiscoverStatistics getWxDiscoverStatistics() {
+        return wxDiscoverStatistics;
+    }
+
+    public void setWxDiscoverStatistics(WxDiscoverStatistics wxDiscoverStatistics) {
+        this.wxDiscoverStatistics = wxDiscoverStatistics;
+    }
+    public List<WxDiscoverGood> getWxDiscoverGood() {
+        return wxDiscoverGood;
+    }
+
+    public void setWxDiscoverGood(List<WxDiscoverGood> wxDiscoverGood) {
+        this.wxDiscoverGood = wxDiscoverGood;
+    }
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+    public Integer getPageTotal() {
+        return pageTotal;
+    }
+
+    public void setPageTotal(Integer pageTotal) {
+        this.pageTotal = pageTotal;
     }
     public List getContentImages() {
         return contentImages;
@@ -130,10 +198,17 @@ public class WxDiscoverArrayContent extends BaseEntity
                 .append("createTime", getCreateTime())
                 .append("contentLabel", getContentLabel())
                 .append("contentType", getContentType())
+                .append("status", getStatus())
+                .append("contentCity",getContentCity())
+                .append("pageTotal", getPageTotal())
+                .append("contentPosition",getContentPosition())
                 .append("WxChatUserInfo", getWxChatUserInfo())
+                .append("WxDiscoverStatistics", getWxDiscoverStatistics())
+                .append("WxDiscoverGood", getWxDiscoverGood())
                 .append("wxDiscoverImage", getContentImages())
                 .toString();
     }
+
 
 
 }

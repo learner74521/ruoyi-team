@@ -49,15 +49,7 @@ public class WxUserServiceImpl implements IWxUserService
     @Override
     public List<WxUser> selectWxUserList(WxUser wxUser)
     {
-        List<WxUser> WxUserList=wxUserMapper.selectWxUserList(wxUser);
-        for (WxUser item : WxUserList) {
-            if (item.getWxName()!=""&&item.getWxName()!=null){
-                Base64Coder base64Coder=new Base64Coder();
-                String decoderText= base64Coder.Base64Decoder(item.getWxName());
-                item.setWxName(decoderText);
-            }
-        }
-        return WxUserList;
+        return wxUserMapper.selectWxUserList(wxUser);
     }
 
     /**
@@ -69,11 +61,6 @@ public class WxUserServiceImpl implements IWxUserService
     @Override
     public int insertWxUser(WxUser wxUser)
     {
-        if (wxUser.getWxName()!=""&&wxUser.getWxName()!=null){
-            Base64Coder base64Coder=new Base64Coder();
-            String encodedText= base64Coder.Base64Encoder(wxUser.getWxName());
-            wxUser.setWxName(encodedText);
-        }
         wxUser.setCreateTime(DateUtils.getNowDate());
         return wxUserMapper.insertWxUser(wxUser);
     }

@@ -13,11 +13,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="comment1"    column="comment1"    />
         <result property="comment2"    column="comment2"    />
         <result property="comment3"    column="comment3"    />
+        <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo" resultMap="WxChatUserInfoResult"/>
+    </resultMap>
+
+    <resultMap id="WxChatUserInfoResult" type="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo">
+        <result property="creatorName"    column="wx_name"    />
+        <result property="creatorAvatar"    column="wx_avatar"    />
     </resultMap>
 
     <sql id="selectWxDiscoverCommentVo">
-        select comment_id, content_id, comment_user_openid, comment_text, create_time, comment1, comment2, comment3 from wx_discover_comment
+        select d.comment_id, d.content_id, d.comment_user_openid, d.comment_text, d.create_time, d.comment1, d.comment2, d.comment3, u.wx_name, u.wx_avatar
+        from wx_discover_comment d
+        left join wx_user u on d.comment_user_openid = u.wx_openid
     </sql>
+
 
     <select id="selectWxDiscoverCommentList" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverComment" resultMap="WxDiscoverCommentResult">
         <include refid="selectWxDiscoverCommentVo"/>
@@ -33,9 +42,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectWxDiscoverCommentById" parameterType="Long" resultMap="WxDiscoverCommentResult">
         <include refid="selectWxDiscoverCommentVo"/>
+        where d.content_id = #{contentId}
+        order by d.comment_id desc
+    </select>
+
+    <select id="selectWxDiscoverCommentByCId" parameterType="Long" resultType="Long">
+        select content_id from wx_discover_comment
         where comment_id = #{commentId}
     </select>
-        
+
     <insert id="insertWxDiscoverComment" parameterType="com.ruoyi.wechatapi.discover.domain.WxDiscoverComment" useGeneratedKeys="true" keyProperty="commentId">
         insert into wx_discover_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -73,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteWxDiscoverCommentById" parameterType="Long">
-        delete from wx_discover_comment where comment_id = #{commentId}
+        delete from wx_discover_comment  where comment_id = #{commentId}
     </delete>
 
     <delete id="deleteWxDiscoverCommentByIds" parameterType="String">

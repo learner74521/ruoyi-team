@@ -30,8 +30,8 @@ public class WxDiscoverGood extends BaseEntity
     @Excel(name = "点赞人id")
     private String goodUserOpenid;
 
-    /** 点赞状态（1点赞，2取消嗲赞） */
-    @Excel(name = "点赞状态", readConverterExp = "1=点赞，2取消嗲赞")
+    /** 点赞状态（1点赞，2取消点赞） */
+    @Excel(name = "点赞状态", readConverterExp = "1=点赞，2取消点赞")
     private Integer status;
 
     /** null */

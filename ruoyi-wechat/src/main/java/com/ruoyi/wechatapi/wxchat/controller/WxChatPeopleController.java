@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatPeople;
@@ -32,7 +33,7 @@ public class WxChatPeopleController extends BaseController
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(WxChatPeople wxChatPeople)
+    public TableDataInfo list(@RequestBody WxChatPeople wxChatPeople)
     {
         startPage();
         List<WxChatPeople> list = wxChatPeopleService.selectWxChatPeopleList(wxChatPeople);
@@ -47,8 +48,9 @@ public class WxChatPeopleController extends BaseController
 
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WxChatPeople wxChatPeople)
+    public AjaxResult addSave(@RequestBody WxChatPeople wxChatPeople)
     {
+        System.out.println(wxChatPeople);
         return toAjax(wxChatPeopleService.insertWxChatPeople(wxChatPeople));
     }
 
@@ -57,7 +59,7 @@ public class WxChatPeopleController extends BaseController
      */
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(WxChatPeople wxChatPeople)
+    public AjaxResult editSave(@RequestBody WxChatPeople wxChatPeople)
     {
         return toAjax(wxChatPeopleService.updateWxChatPeople(wxChatPeople));
     }
@@ -65,9 +67,19 @@ public class WxChatPeopleController extends BaseController
     /**
      * 删除聊天室人员信息
      */
-    @PostMapping( "/remove")
+    @PostMapping( "/delete")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult delete(@RequestBody WxChatPeople wxChatPeople)
+    {
+        return toAjax(wxChatPeopleService.deleteWxChatPeopleById(wxChatPeople));
+    }
+
+    /**
+     * 删除聊天室人员信息
+     */
+    @PostMapping("/remove")
+    @ResponseBody
+    public AjaxResult remove(@RequestBody String ids)
     {
         return toAjax(wxChatPeopleService.deleteWxChatPeopleByIds(ids));
     }

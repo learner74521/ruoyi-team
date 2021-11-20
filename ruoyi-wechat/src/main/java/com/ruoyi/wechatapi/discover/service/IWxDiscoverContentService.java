@@ -27,7 +27,15 @@ public interface IWxDiscoverContentService
      * @param wxDiscoverContent 发现区域的动态内容
      * @return 发现区域的动态内容集合
      */
-    public List<WxDiscoverContent> selectWxDiscoverContentList(WxDiscoverContent wxDiscoverContent);
+    public List<WxDiscoverArrayContent> selectWxDiscoverContentList(WxDiscoverContent wxDiscoverContent);
+
+    /**
+     * 查询发现区域的动态内容列表
+     *
+     * @param  wxDiscoverContent 发现区域的动态内容
+     * @return 发现区域的动态内容集合
+     */
+    public List<WxDiscoverArrayContent> selectWxDiscoverContentListByOpenid(WxDiscoverContent wxDiscoverContent);
 
     /**
      * 新增发现区域的动态内容

@@ -22,17 +22,6 @@ public class WebSocketServiceImpl implements IWebSocketService
     @Autowired
     private WebSocketMapper webSocketMapper;
 
-    private List<WebSocketMessage> WebSocketMessageList;
-    private void WebSocketMessageList(List<WebSocketMessage> webSocketMessageList) {
-
-        for (WebSocketMessage item : webSocketMessageList) {
-            if (item.getWxChatUserInfo().getCreatorName()!=""&&item.getWxChatUserInfo().getCreatorName()!=null){
-                Base64Coder base64Coder=new Base64Coder();
-                String decoderText= base64Coder.Base64Decoder(item.getWxChatUserInfo().getCreatorName());
-                item.getWxChatUserInfo().setCreatorName(decoderText);
-            }
-        }
-    }
 
     /**
      * 查询聊天室聊天内容
@@ -43,9 +32,7 @@ public class WebSocketServiceImpl implements IWebSocketService
     @Override
     public List<WebSocketMessage> selectWebSocketByRoomId(Long roomId)
     {
-        WebSocketMessageList = webSocketMapper.selectWebSocketByRoomId(roomId);
-        WebSocketMessageList(WebSocketMessageList);
-        return WebSocketMessageList;
+        return webSocketMapper.selectWebSocketByRoomId(roomId);
     }
 
 
@@ -58,9 +45,7 @@ public class WebSocketServiceImpl implements IWebSocketService
     @Override
     public List<WebSocketMessage> selectWebSocketList(WebSocketMessage webSocketMessage)
     {
-        WebSocketMessageList=webSocketMapper.selectWebSocketList(webSocketMessage);
-        WebSocketMessageList(WebSocketMessageList);
-        return WebSocketMessageList;
+        return webSocketMapper.selectWebSocketList(webSocketMessage);
     }
 
     /**

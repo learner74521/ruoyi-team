@@ -1,9 +1,9 @@
 package com.ruoyi.wechatapi.discover.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
+
+import com.ruoyi.common.core.domain.PageEntity;
 import com.ruoyi.wechatapi.discover.domain.WxDiscoverArrayContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,24 +39,31 @@ public class WxDiscoverContentController extends BaseController
     @ResponseBody
     public TableDataInfo list(@RequestBody WxDiscoverContent wxDiscoverContent)
     {
-        startPage();
-        List<WxDiscoverContent> wxDiscoverContentList = wxDiscoverContentService.selectWxDiscoverContentList(wxDiscoverContent);
-        List<WxDiscoverArrayContent> wxDiscoverArrayContentList=new ArrayList<>();
-        for (WxDiscoverContent array:wxDiscoverContentList) {
-            WxDiscoverArrayContent wxDiscoverArrayContent=JSON.parseObject(JSON.toJSONString(array),WxDiscoverArrayContent.class);
-            wxDiscoverArrayContent.setContentImages(JSON.parseArray(array.getContentImages()));
-            wxDiscoverArrayContentList.add(wxDiscoverArrayContent);
-        }
-        return getDataTable(wxDiscoverArrayContentList);
+        startPage(wxDiscoverContent);
+        List<WxDiscoverArrayContent> list = wxDiscoverContentService.selectWxDiscoverContentList(wxDiscoverContent);
+        return getDataTable(list);
     }
 
+    /**
+     * 查询发现区域的动态内容列表
+     *
+     * @param wxDiscoverContent 发现区域的动态内容
+     * @return 发现区域的动态内容集合
+     */
+    @PostMapping("/careList")
+    @ResponseBody
+    public TableDataInfo selectWxDiscoverContentListByOpenid(@RequestBody WxDiscoverContent wxDiscoverContent){
+        startPage(wxDiscoverContent);
+        List<WxDiscoverArrayContent> list = wxDiscoverContentService.selectWxDiscoverContentListByOpenid(wxDiscoverContent);
+        return getDataTable(list);
+    }
 
     /**
      * 新增保存发现区域的动态内容
      */
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(WxDiscoverContent wxDiscoverContent)
+    public AjaxResult addSave(@RequestBody WxDiscoverContent wxDiscoverContent)
     {
         return toAjax(wxDiscoverContentService.insertWxDiscoverContent(wxDiscoverContent));
     }
@@ -66,7 +73,7 @@ public class WxDiscoverContentController extends BaseController
      */
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(WxDiscoverContent wxDiscoverContent)
+    public AjaxResult editSave(@RequestBody WxDiscoverContent wxDiscoverContent)
     {
         return toAjax(wxDiscoverContentService.updateWxDiscoverContent(wxDiscoverContent));
     }
@@ -76,8 +83,19 @@ public class WxDiscoverContentController extends BaseController
      */
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
+    public AjaxResult remove(@RequestBody String ids)
     {
         return toAjax(wxDiscoverContentService.deleteWxDiscoverContentByIds(ids));
+    }
+
+    /**
+     * 删除发现区域的动态内容
+     */
+    @PostMapping( "/delete")
+    @ResponseBody
+    public AjaxResult delete(@RequestBody Long contentId)
+    {
+        System.out.println(contentId);
+        return toAjax(wxDiscoverContentService.deleteWxDiscoverContentById(contentId));
     }
 }

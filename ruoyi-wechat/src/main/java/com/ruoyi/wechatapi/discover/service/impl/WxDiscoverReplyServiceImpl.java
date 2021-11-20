@@ -2,6 +2,7 @@ package com.ruoyi.wechatapi.discover.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.wechatapi.discover.mapper.WxDiscoverStatisticsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.wechatapi.discover.mapper.WxDiscoverReplyMapper;
@@ -21,6 +22,9 @@ public class WxDiscoverReplyServiceImpl implements IWxDiscoverReplyService
     @Autowired
     private WxDiscoverReplyMapper wxDiscoverReplyMapper;
 
+    @Autowired
+    private WxDiscoverStatisticsMapper wxDiscoverStatisticsMapper;
+
     /**
      * 查询评论回复
      * 
@@ -28,7 +32,7 @@ public class WxDiscoverReplyServiceImpl implements IWxDiscoverReplyService
      * @return 评论回复
      */
     @Override
-    public WxDiscoverReply selectWxDiscoverReplyById(Long replyId)
+    public List<WxDiscoverReply> selectWxDiscoverReplyById(Long replyId)
     {
         return wxDiscoverReplyMapper.selectWxDiscoverReplyById(replyId);
     }
@@ -54,6 +58,7 @@ public class WxDiscoverReplyServiceImpl implements IWxDiscoverReplyService
     @Override
     public int insertWxDiscoverReply(WxDiscoverReply wxDiscoverReply)
     {
+        wxDiscoverStatisticsMapper.updateAddCommentStatistics(wxDiscoverReply.getContentId());
         wxDiscoverReply.setCreateTime(DateUtils.getNowDate());
         return wxDiscoverReplyMapper.insertWxDiscoverReply(wxDiscoverReply);
     }
@@ -91,6 +96,8 @@ public class WxDiscoverReplyServiceImpl implements IWxDiscoverReplyService
     @Override
     public int deleteWxDiscoverReplyById(Long replyId)
     {
+        Long contentId=wxDiscoverReplyMapper.selectWxDiscoverReplyByCId(replyId);
+        wxDiscoverStatisticsMapper.updateReduceCommentStatistics(contentId);
         return wxDiscoverReplyMapper.deleteWxDiscoverReplyById(replyId);
     }
 }

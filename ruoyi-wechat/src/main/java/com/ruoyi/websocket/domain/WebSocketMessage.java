@@ -1,5 +1,7 @@
 package com.ruoyi.websocket.domain;
 
+import com.github.pagehelper.Page;
+import com.ruoyi.common.core.domain.PageEntity;
 import com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -12,12 +14,15 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2020-06-20
  */
-public class WebSocketMessage extends BaseEntity
+public class WebSocketMessage extends PageEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 消息id */
     private Long newsId;
+
+    /** 类型  0=增加消息 1撤回消息 */
+    private Integer type;
 
     /** 聊天人唯一标识 */
     @Excel(name = "聊天人唯一标识")
@@ -115,4 +120,11 @@ public class WebSocketMessage extends BaseEntity
     }
 
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 }
