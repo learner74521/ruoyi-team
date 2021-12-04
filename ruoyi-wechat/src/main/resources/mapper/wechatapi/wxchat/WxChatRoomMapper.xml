@@ -28,7 +28,7 @@
         <result property="roomIntroduce" column="room_introduce" />
         <result property="endTime"  column="end_time" />
         <result property="roomSite" column="room_site"/>
-        <result property="roomPosition" column="room_position" />r
+        <result property="roomPosition" column="room_position" />
         <association property="wxChatUserInfo" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUserInfo" resultMap="WxChatUserInfoResult"/>
         <association property="wxChatUnread" javaType="com.ruoyi.wechatapi.wxchat.domain.WxChatUnread" resultMap="WxChatUnreadResult"/>
     </resultMap>
